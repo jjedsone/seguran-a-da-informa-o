@@ -10,6 +10,7 @@ export const categoriasAtalhos = [
   { id: 'rede', nome: 'Rede', cor: '#3b82f6' },
   { id: 'ataques', nome: 'Estratégia ataques', cor: '#ef4444' },
   { id: 'defesa', nome: 'Estratégia defesa', cor: '#10b981' },
+  { id: 'conformidade', nome: 'Conformidade / ISO', cor: '#8b5cf6' },
 ];
 
 export const atalhos = [
@@ -275,6 +276,21 @@ export const atalhos = [
       { label: 'Windows – enumeração', codigo: '# Onde: shell (cmd ou PowerShell) no alvo Windows.\nwhoami\nwhoami /priv\nsysteminfo\nnet user\nnet localgroup administrators\nipconfig\nnetstat -an\n# Buscar senhas em texto: dir /s /b *.txt (cuidado em produção)' },
       { label: 'Linux – escalar para root (ex.: exploit SUID)', codigo: '# Se encontrar binário SUID (ex.: find / -perm -4000).\n# Pesquisar no searchsploit: searchsploit nome_binario\n# Ou: LinPEAS, LinEnum (scripts de enumeração automática).' },
       { label: 'Windows – dump de hashes (após admin)', codigo: '# No Kali (Meterpreter): hashdump\n# Ou no alvo com mimikatz (autorizado). Hashes NTLM para Pass-the-Hash ou crack offline.' },
+    ],
+  },
+
+  // ========== CONFORMIDADE / ISO 27001 ==========
+  {
+    id: 'iso27001-atalho',
+    categoriaId: 'conformidade',
+    titulo: 'ISO 27001 – Referência rápida (atalho)',
+    blocos: [
+      { label: 'O que é a ISO 27001', codigo: 'Norma internacional para Sistema de Gestão de Segurança da Informação (SGSI). Foco: confidencialidade, integridade e disponibilidade da informação. Certificação por organismo acreditado; ciclo PDCA (Plan-Do-Check-Act).' },
+      { label: 'Estrutura de alto nível (cláusulas 4–10)', codigo: '4 Contexto da organização (partes interessadas, escopo)\n5 Liderança (política, papéis, responsabilidades)\n6 Planejamento (riscos, objetivos)\n7 Suporte (recursos, competência, conscientização, comunicação, documentação)\n8 Operação (controles do Anexo A, gestão de mudanças)\n9 Avaliação de desempenho (monitoramento, auditoria interna, análise crítica)\n10 Melhoria (não conformidades, melhoria contínua)' },
+      { label: 'Anexo A – Controles (resumo por domínio)', codigo: 'A.5 Organizacional (políticas, segregação de funções, gestão de ativos, controle de acesso)\nA.6 Pessoas (vetting, conscientização, disciplina)\nA.7 Físico (segurança em escritório, equipamentos, cabos)\nA.8 Tecnológico (controle de acesso lógico, criptografia, segurança em operações, comunicações, aquisição/desenvolvimento de sistemas)' },
+      { label: 'Controles essenciais – checklist rápido', codigo: '[] Política de segurança da informação aprovada e comunicada\n[] Análise de riscos documentada e tratada\n[] Controle de acesso (identificação, autenticação, autorização, MFA para críticos)\n[] Criptografia para dados sensíveis em repouso e em trânsito\n[] Backup e teste de restauração\n[] Gestão de vulnerabilidades e patch\n[] Resposta a incidentes (plano, contatos, procedimentos)\n[] Auditoria interna e análise crítica pela direção' },
+      { label: 'LGPD x ISO 27001', codigo: 'LGPD: lei brasileira; foco em dados pessoais; bases legais, direitos do titular, ANPD.\nISO 27001: norma voluntária; foco em SGSI amplo (qualquer informação).\nQuem está em conformidade com ISO 27001 tem boa base para LGPD (controles de segurança, governança); mas precisa mapear dados pessoais, bases legais e direitos do titular separadamente.' },
+      { label: 'GDPR (Europa) – paralelo', codigo: 'Regulamento europeu; aplica-se a dados de residentes na UE. Princípios: licitude, finalidade, minimização, exatidão, limitação de conservação, integridade/confidencialidade, prestação de contas. Direitos: acesso, retificação, apagamento, portabilidade, oposição. Multas até 4% do faturamento global. DPO obrigatório em certos casos.' },
     ],
   },
 

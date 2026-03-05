@@ -943,11 +943,87 @@ Coleta e preservação de evidências digitais; imagem forense; análise de míd
 Princípios: não alterar original; documentar toda ação; cadeia de custódia. Criar imagem forense (bit-a-bit) antes de analisar. Análise de arquivos (incluindo apagados), sistema de arquivos, registro (Windows), logs. Reconstruir sequência de eventos (quem, quando, o quê). Relatório pericial: metodologia, evidências, conclusões. Noções de admissibilidade em processo.`,
 
   'p5-auditoria-conformidade': `# Auditoria e Conformidade em Segurança Cibernética (72h)
+
 ## Ementa
 Normas (ISO 27001, LGPD, GDPR), políticas de segurança, controles técnicos e administrativos, avaliação de riscos e relatório de auditoria. Governança e conformidade.
 
-## Objetivos e conteúdo
-Interpretar requisitos de normas (ISO 27001, LGPD, GDPR). Definir e revisar políticas (senha, acesso, backup, uso aceitável). Mapear controles para requisitos. Realizar avaliação de riscos e auditoria (evidências, achados, não conformidades). Relatório com recomendações e plano de ação. Papel do auditor e do DPO.`,
+## Objetivos gerais
+- Interpretar requisitos de ISO 27001, LGPD e GDPR e aplicá-los no dia a dia.
+- Definir e revisar políticas; mapear controles para requisitos.
+- Realizar avaliação de riscos e auditoria com evidências, achados e plano de ação.
+- Compreender o papel do auditor e do DPO.
+
+---
+
+## Como a ISO 27001 funciona (ensino de especialista)
+
+A **ISO/IEC 27001** é a norma internacional que define requisitos para um **Sistema de Gestão de Segurança da Informação (SGSI)**. Não é uma lista solta de “boas práticas”: é um **sistema** com contexto, liderança, planejamento, operação, avaliação e melhoria.
+
+### Ciclo PDCA
+- **Plan (Planejar)**: definir escopo, política, análise de riscos e decisão sobre quais controles (Anexo A) aplicar.
+- **Do (Fazer)**: implementar os controles e operar o SGSI.
+- **Check (Verificar)**: monitorar, fazer auditoria interna, análise crítica pela direção.
+- **Act (Agir)**: tratar não conformidades e melhorar continuamente.
+
+### Estrutura da norma (cláusulas 4 a 10)
+- **4 – Contexto**: quem é a organização, partes interessadas, escopo do SGSI.
+- **5 – Liderança**: política de segurança, papéis (ex.: dono do SGSI), responsabilidades.
+- **6 – Planejamento**: riscos (identificação, análise, avaliação, tratamento); objetivos de segurança.
+- **7 – Suporte**: recursos, competência, conscientização, comunicação, documentação.
+- **8 – Operação**: implementação dos controles (Anexo A), gestão de mudanças.
+- **9 – Avaliação**: monitoramento, auditoria interna, análise crítica pela direção.
+- **10 – Melhoria**: não conformidades, ações corretivas, melhoria contínua.
+
+### Anexo A – Controles
+O Anexo A traz uma lista de controles organizados em domínios (organizacional, pessoas, físico, tecnológico). A organização **não precisa** aplicar todos; faz a **análise de riscos** e justifica quais controles aplica e quais não (statement of applicability – SoA).
+
+---
+
+## Exemplos práticos (como professor especialista)
+
+### Exemplo 1 – Política de senha (controle A.5.16)
+**Requisito (resumido)**: regras de autenticação por senha (complexidade, troca, proteção).  
+**Prática**: política aprovada pela direção: mínimo 12 caracteres, mistura de tipos, troca a cada 90 dias (ou uso de SSO/MFA que dispense troca periódica), bloqueio após 5 tentativas, sem reutilização das últimas 5. Treinamento para usuários; auditoria de contas (verificar contas sem login há 90 dias).
+
+### Exemplo 2 – Backup (controle A.8.13)
+**Requisito**: informação deve ser protegida por backup; testes de restauração.  
+**Prática**: backup diário automatizado (incremental/diferencial + full semanal); retenção definida (ex.: 30 dias); backup em local ou mídia separada; **teste de restauração** mensal com registro (quem testou, quando, resultado). Em auditoria, o auditor pede: política de backup, logs de backup e **evidência de teste de restauração**.
+
+### Exemplo 3 – Gestão de vulnerabilidades (controle A.8.8)
+**Requisito**: vulnerabilidades técnicas devem ser identificadas e tratadas.  
+**Prática**: varredura mensal (ou contínua) com ferramenta (ex.: Nessus, OpenVAS); classificação por criticidade (CVSS); prazo para correção (ex.: crítico 7 dias, alto 30 dias); registro de exceção quando patch não for possível (mitigação alternativa, risco aceito por escrito). Auditor pede: relatório de varredura, matriz de vulnerabilidades e evidência de correção ou exceção.
+
+### Exemplo 4 – Auditoria interna (cláusula 9.2)
+**Requisito**: auditorias internas em intervalos planejados para verificar se o SGSI está conforme a norma e implementado.  
+**Prática**: plano de auditoria anual (quais processos/áreas, quando, quem); auditores com independência (não auditam o próprio processo); relatório de achados (conformidade, não conformidade, oportunidade de melhoria); análise crítica pela direção com base nos relatórios.
+
+---
+
+## LGPD e GDPR – em poucas linhas
+- **LGPD (Brasil)**: proteção de dados pessoais; bases legais (consentimento, legítimo interesse, etc.); direitos do titular (acesso, correção, eliminação, portabilidade); ANPD aplica sanções. Controles de segurança (ISO 27001) ajudam a atender ao princípio de segurança.
+- **GDPR (Europa)**: aplicável a dados de residentes na UE; princípios semelhantes; multas altas; DPO obrigatório em certos casos. Empresas que processam dados na UE precisam mapear base legal, direitos e medidas técnicas/organizacionais.
+
+---
+
+## Papel do auditor e do DPO
+- **Auditor (interno ou externo)**: verifica se o SGSI está implementado e em conformidade com a norma; coleta evidências (documentos, entrevistas, amostras); emite relatório com achados (conformidade/não conformidade). Não implementa; avalia.
+- **DPO (Data Protection Officer)**: focado em proteção de dados (LGPD/GDPR); canal entre organização, titulares e ANPD; orienta sobre tratamento de dados pessoais, bases legais e resposta a incidentes. Pode ser interno ou externo.
+
+---
+
+## Atalho ISO 27001
+Para uma **referência rápida** da ISO 27001 (estrutura, Anexo A, checklist e paralelo LGPD/GDPR), use a seção **Atalhos** desta base de conhecimento e busque por **ISO 27001** ou categoria **Conformidade / ISO**.
+
+---
+
+## Mentalidade profissional
+Conformidade não é “documento para mostrar na auditoria”. É **governança**: política clara, riscos tratados, evidências de que os controles funcionam. O profissional de cybersecurity que entende ISO 27001 e LGPD/GDPR consegue dialogar com compliance, jurídico e direção e propor ações factíveis.
+
+## Checklist de aprendizagem
+- [ ] Explicar o ciclo PDCA na ISO 27001.
+- [ ] Dar um exemplo prático de controle do Anexo A (ex.: backup, senha, vulnerabilidades).
+- [ ] Diferenciar papel do auditor e do DPO.
+- [ ] Citar três princípios da LGPD e como a ISO 27001 apoia a conformidade.`,
 
   'p5-cyberwar': `# Cyberwar (36h)
 ## Ementa

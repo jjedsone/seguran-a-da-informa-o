@@ -5,6 +5,7 @@ import StudyCard from './components/StudyCard';
 import StudyDetail from './components/StudyDetail';
 import PaginaAtalhos from './components/PaginaAtalhos';
 import PaginaBackdoor from './components/PaginaBackdoor';
+import PaginaSegmentos from './components/PaginaSegmentos';
 import Login from './components/Login';
 import './App.css';
 
@@ -62,6 +63,7 @@ export default function App() {
         <div className="app__global-nav-links">
           {navLink('curso', 'Curso')}
           {navLink('atalhos', 'Atalhos')}
+          {navLink('segmentos', 'Proteção por segmento')}
           {navLink('backdoor', 'Backdoor & Acesso remoto')}
         </div>
         <button
@@ -85,6 +87,8 @@ export default function App() {
       </nav>
 
       {pagina === 'atalhos' && <PaginaAtalhos />}
+
+      {pagina === 'segmentos' && <PaginaSegmentos />}
 
       {pagina === 'backdoor' && <PaginaBackdoor />}
 
