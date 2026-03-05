@@ -1,0 +1,314 @@
+.simulado {
+  min-height: 100vh;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.simulado__header {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.simulado__titulo {
+  font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.simulado__subtitulo {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+}
+
+.simulado__filtro-wrap {
+  margin-bottom: 0.75rem;
+}
+
+.simulado__label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.simulado__select {
+  width: 100%;
+  max-width: 320px;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.simulado__contador {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0 0 1.5rem;
+}
+
+.simulado__btn-iniciar {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.simulado__btn-iniciar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.simulado__vazio {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 3rem 1rem;
+}
+
+.simulado__btn-voltar {
+  display: block;
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+/* Barra durante o simulado */
+.simulado__barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+}
+
+.simulado__progresso {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.simulado__score {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.simulado__btn-sair {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  background: var(--bg-tag);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.simulado__btn-sair:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Card da questão */
+.simulado__main {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.simulado__questao-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 1.5rem 1.5rem;
+  box-shadow: 0 4px 20px var(--shadow);
+}
+
+.simulado__cert-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  background: var(--accent-alpha);
+  border-radius: 4px;
+}
+
+.simulado__pergunta {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin: 0 0 1.25rem;
+}
+
+.simulado__opcoes {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.simulado__opcoes li {
+  margin-bottom: 0.5rem;
+}
+
+.simulado__opcao {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 2px solid var(--border-card);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.simulado__opcao:hover:not(.simulado__opcao--correta):not(.simulado__opcao--errada) {
+  border-color: var(--accent);
+  background: var(--accent-alpha);
+}
+
+.simulado__opcao--selecionada {
+  border-color: var(--accent);
+  background: var(--accent-alpha);
+}
+
+.simulado__opcao--correta {
+  border-color: var(--accent);
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.simulado__opcao--errada {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.simulado__opcao input[type="radio"] {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.simulado__opcao-texto {
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  line-height: 1.45;
+}
+
+.simulado__opcao-marca {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.simulado__opcao-marca--erro {
+  color: #ef4444;
+}
+
+.simulado__explicacao {
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.25rem;
+}
+
+.simulado__explicacao--acerto {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.simulado__explicacao--erro {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.simulado__explicacao-titulo {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.simulado__explicacao--acerto .simulado__explicacao-titulo {
+  color: var(--accent);
+}
+
+.simulado__explicacao--erro .simulado__explicacao-titulo {
+  color: #ef4444;
+}
+
+.simulado__explicacao-texto {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.simulado__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.simulado__btn {
+  padding: 0.6rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.simulado__btn-responder {
+  border: none;
+  background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+  color: #fff;
+}
+
+.simulado__btn-responder:hover:not(:disabled) {
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+
+.simulado__btn-responder:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.simulado__btn-nav {
+  border: 1px solid var(--border-card);
+  background: var(--bg-tag);
+  color: var(--text-primary);
+}
+
+.simulado__btn-nav:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-alpha);
+}
+
+.simulado__btn-nav:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
