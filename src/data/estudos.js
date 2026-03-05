@@ -45,34 +45,9 @@ const estudosBase = [
     periodoId: '1',
     titulo: 'Conceitos de Computação',
     horas: 72,
-    resumo: 'Funcionamento real do computador: hardware, software, memória e processamento. Base do raciocínio técnico.',
-    tags: ['hardware', 'software', 'CPU', 'memória', 'fundamentos'],
-    conteudo: `# Conceitos de Computação (72h)
-## Objetivo
-Compreender o funcionamento interno do computador. Segurança começa entendendo a máquina.
-
-## Conteúdo destrinchado
-
-### Hardware (parte física)
-- **CPU**: executa instruções; núcleos e threads; ataques de negação de serviço exploram processamento.
-- **Memória RAM**: volátil; dados sensíveis passam por ela; ataques em memória (buffer overflow, injeção de código).
-- **Disco (HD/SSD)**: sistema de arquivos; apagar não significa destruir; dados em repouso.
-- **Placa-mãe e periféricos**: comunicação entre componentes; riscos físicos (USB, firmware).
-
-### Software (parte lógica)
-- **Sistema operacional**: gerencia memória, processos, usuários e permissões. Quem controla o SO controla tudo.
-- **Aplicativos**: vulnerabilidades nascem no software.
-- **Drivers e firmware**: camadas baixas = impacto alto.
-
-### Ciclo entrada → processamento → saída
-- Dado, informação e conhecimento.
-- Nada acontece "do nada" em um computador.
-
-### Mentalidade profissional
-O profissional de segurança entende a máquina. O operador fraco só sabe clicar em ferramenta.
-
-### Prática
-Identificar componentes reais e relacionar cada um com possíveis falhas de segurança.`,
+    resumo: 'Ementa completa: arquitetura de hardware e software, ciclo processamento, dado/informação/conhecimento. CPU, RAM, disco, SO, drivers; ataques (buffer overflow, DDoS). Base do raciocínio técnico em segurança.',
+    tags: ['hardware', 'software', 'CPU', 'memória', 'RAM', 'fundamentos', 'ementa'],
+    conteudo: null,
   },
   {
     id: 'p1-fundamentos-administracao',

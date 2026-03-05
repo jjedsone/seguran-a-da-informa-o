@@ -834,7 +834,64 @@ Estratégia da segurança cibernética: ameaças (malware, phishing, DDoS, etc.)
 - Integrar monitoramento e resposta em um modelo de segurança contínua.
 
 ## Conteúdo completo (unidades)
-1. **Ameaças**: malware (vírus, trojan, ransomware, spyware), phishing, engenharia social, força bruta, DDoS, insider threat. 2. **Superfície de ataque**: portas, serviços, aplicações, usuários, dispositivos; minimizar o exposto. 3. **Defesa em profundidade**: camadas (perímetro, rede, endpoint, dados, aplicação); nenhuma tecnologia sozinha resolve. 4. **Monitoramento**: SIEM, logs, tráfego, comportamento; detecção e resposta. 5. **Gestão de segurança**: políticas, treinamento, testes, melhoria contínua. Segurança nunca “fica pronta”; é processo.`,
+## Objetivos específicos
+- Listar e descrever ameaças: malware, phishing, engenharia social, DDoS, insider threat.
+- Mapear superfície de ataque (portas, serviços, aplicações, usuários) e propor redução.
+- Desenhar camadas de defesa (perímetro, rede, endpoint, dados, aplicação).
+- Explicar papel do monitoramento (SIEM, logs, tráfego) na detecção e resposta.
+
+---
+
+## Unidade 1 – Ameaças cibernéticas
+- **Malware**: vírus, trojan, ransomware, spyware; vetores (e-mail, download, vulnerabilidade, USB).
+- **Phishing e engenharia social**: persuasão para obter credenciais ou acesso; treinamento e conscientização.
+- **Força bruta e credential stuffing**: proteção com MFA, bloqueio, política de senha.
+- **DDoS**: negação de serviço por sobrecarga; mitigação com redundância, CDN, filtros.
+- **Insider threat**: risco interno; controle de acesso, monitoramento, desligamento de contas.
+
+---
+
+## Unidade 2 – Superfície de ataque
+- Tudo que está exposto pode ser alvo: portas abertas, serviços desnecessários, aplicações web, usuários (phishing).
+- Inventário de ativos e de pontos de entrada; minimizar o exposto (hardening, segmentação).
+- Quanto maior a superfície, maior o esforço de defesa e o risco.
+
+---
+
+## Unidade 3 – Defesa em profundidade
+- Nenhuma tecnologia sozinha resolve; várias camadas: perímetro (firewall), rede (segmentação), endpoint (antimalware, EDR), dados (criptografia), aplicação (segurança no código).
+- Se uma camada falhar, as outras podem conter o ataque.
+- Políticas, treinamento e processos fazem parte da defesa.
+
+---
+
+## Unidade 4 – Monitoramento e resposta
+- **SIEM**: agregação de logs e eventos; correlação e alertas.
+- Tráfego de rede, comportamento de usuário e de sistemas; detecção de anomalias.
+- Resposta a incidentes: identificar, conter, erradicar, recuperar, documentar.
+
+---
+
+## Unidade 5 – Gestão contínua de segurança
+- Políticas (senha, uso aceitável, backup, acesso remoto); revisão periódica.
+- Treinamento de usuários; testes (pentest, simulação de phishing).
+- Melhoria contínua: novos riscos surgem; segurança nunca fica pronta.
+
+---
+
+## Mentalidade profissional
+Segurança é processo, não projeto com data de fim. Tecnologia, processos e pessoas devem estar alinhados.
+
+## Prática recomendada
+- Mapear a superfície de ataque de um ambiente pequeno (estações, servidor, portas).
+- Listar três ameaças e uma camada de defesa para cada uma.
+
+## Checklist de aprendizagem
+- [ ] Citar cinco tipos de ameaça cibernética e uma mitigação para cada.
+- [ ] Explicar defesa em profundidade com exemplo de três camadas.
+- [ ] Descrever o papel do monitoramento na detecção de incidentes.
+
+---`,
 
   'p4-teste-intrusao-redes': `# Práticas de Teste de Intrusão em Redes (72h)
 ## Ementa

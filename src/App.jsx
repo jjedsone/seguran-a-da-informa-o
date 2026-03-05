@@ -92,7 +92,7 @@ export default function App() {
         <>
           <header className="app__header">
             <h1 className="app__titulo">Curso de Segurança Cibernética</h1>
-            <p className="app__subtitulo">Formação profissional – 5 períodos · Material completo por disciplina</p>
+            <p className="app__subtitulo">Base de conhecimento – Formação profissional · 5 períodos · Material completo por disciplina</p>
             <p className="app__metodologia">Ementa, objetivos gerais e específicos, unidades temáticas, mentalidade profissional, prática e checklist de aprendizagem — nível faculdade de elite.</p>
             <SearchBar value={busca} onChange={setBusca} placeholder="Buscar disciplina, tag ou tema..." />
             <nav className="app__filtros" aria-label="Filtrar por período">
