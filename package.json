@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:firebase": "cross-env FIREBASE=1 vite build",
+    "deploy:firebase": "npm run build:firebase && firebase deploy",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -14,6 +16,8 @@
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
+    "firebase-tools": "^13.0.0",
     "@eslint/js": "^9.39.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

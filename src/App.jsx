@@ -36,15 +36,15 @@ export default function App() {
     setAutenticado(false);
   };
 
-  if (!autenticado) {
-    return <Login onLogin={handleLogin} />;
-  }
-
   const listaFiltrada = useMemo(() => {
     let resultado = buscarEstudos(busca);
     if (categoriaAtiva) resultado = resultado.filter((e) => e.periodoId === categoriaAtiva);
     return resultado;
   }, [busca, categoriaAtiva]);
+
+  if (!autenticado) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   const navLink = (id, label) => (
     <button
