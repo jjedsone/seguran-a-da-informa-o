@@ -564,6 +564,8 @@ Logs registram quem acessou, quando e o quê. Essenciais para detecção e respo
 ## Mentalidade profissional
 Saber se um sistema está seguro exige método: políticas claras, controles implementados, auditoria e análise de logs. Ataques frequentemente exploram vulnerabilidades conhecidas e configurações fracas.`,
 
+
+
   'p2-sistema-operacional-i': `# Sistema Operacional I (72h)
 ## Ementa
 Administração de sistemas operacionais (Windows e Linux): usuários e grupos, permissões e ACL, processos e serviços, atualizações e logs. Base para hardening e resposta a incidentes.
