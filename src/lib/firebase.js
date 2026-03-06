@@ -11,11 +11,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID ?? '',
 };
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
-
-export function isFirebaseConfigured() {
+function isConfigValid() {
   return Boolean(
     firebaseConfig.apiKey &&
     firebaseConfig.projectId &&
@@ -23,8 +19,24 @@ export function isFirebaseConfigured() {
   );
 }
 
+let app = null;
+let db = null;
+let auth = null;
+
+if (isConfigValid()) {
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  auth = getAuth(app);
+}
+
+export { db, auth };
+
+export function isFirebaseConfigured() {
+  return isConfigValid();
+}
+
 export async function ensureAnonymousAuth() {
-  if (!isFirebaseConfigured()) return null;
+  if (!isFirebaseConfigured() || !auth) return null;
   const { user } = auth.currentUser
     ? { user: auth.currentUser }
     : await signInAnonymously(auth);
