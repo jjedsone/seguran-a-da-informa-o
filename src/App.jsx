@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { estudos, periodos, buscarEstudos } from './data/estudos';
 import SearchBar from './components/SearchBar';
 import StudyCard from './components/StudyCard';
@@ -9,6 +9,7 @@ import PaginaSegmentos from './components/PaginaSegmentos';
 import PaginaCertificacoes from './components/PaginaCertificacoes';
 import PaginaSimulado from './components/PaginaSimulado';
 import Login from './components/Login';
+import { initFirebaseUserAndPrefs, subscribePreferencias, savePreferencias } from './lib/firestorePrefs';
 import './App.css';
 
 const THEME_KEY = 'seguranca-app-theme';
@@ -21,11 +22,33 @@ export default function App() {
   const [busca, setBusca] = useState('');
   const [categoriaAtiva, setCategoriaAtiva] = useState('');
   const [estudoAberto, setEstudoAberto] = useState(null);
+  const [firebaseUserId, setFirebaseUserId] = useState(null);
+  const temaFromFirestoreRef = useRef(false);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', tema);
     localStorage.setItem(THEME_KEY, tema);
   }, [tema]);
+
+  useEffect(() => {
+    let unsub = () => {};
+    initFirebaseUserAndPrefs().then((uid) => {
+      if (!uid) return;
+      setFirebaseUserId(uid);
+      unsub = subscribePreferencias(uid, (data) => {
+        if (data.tema && !temaFromFirestoreRef.current) {
+          temaFromFirestoreRef.current = true;
+          setTema(data.tema);
+        }
+      });
+    });
+    return () => unsub();
+  }, []);
+
+  useEffect(() => {
+    if (!firebaseUserId) return;
+    savePreferencias(firebaseUserId, { tema }).catch(() => {});
+  }, [firebaseUserId, tema]);
 
   const toggleTema = () => setTema((t) => (t === 'dark' ? 'light' : 'dark'));
 
@@ -98,7 +121,7 @@ export default function App() {
 
       {pagina === 'certificacoes' && <PaginaCertificacoes />}
 
-      {pagina === 'simulado' && <PaginaSimulado />}
+      {pagina === 'simulado' && <PaginaSimulado firebaseUserId={firebaseUserId} />}
 
       {pagina === 'curso' && (
         <>

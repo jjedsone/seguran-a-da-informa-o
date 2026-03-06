@@ -1,5 +1,6 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { questoesSimulado, certificacoesSimulado } from '../data/questoesSimulado';
+import { saveSimuladoProgress } from '../lib/firestorePrefs';
 import './PaginaSimulado.css';
 
 function shuffleArray(arr) {
@@ -11,7 +12,7 @@ function shuffleArray(arr) {
   return a;
 }
 
-export default function PaginaSimulado() {
+export default function PaginaSimulado({ firebaseUserId }) {
   const [filtroCert, setFiltroCert] = useState('');
   const [questoes] = useState(() => shuffleArray(questoesSimulado));
   const [indiceAtual, setIndiceAtual] = useState(0);
@@ -19,6 +20,12 @@ export default function PaginaSimulado() {
   const [mostrarResultado, setMostrarResultado] = useState(false);
   const [historico, setHistorico] = useState({ acertos: 0, total: 0 });
   const [iniciado, setIniciado] = useState(false);
+
+  useEffect(() => {
+    if (firebaseUserId && historico.total > 0) {
+      saveSimuladoProgress(firebaseUserId, historico).catch(() => {});
+    }
+  }, [firebaseUserId, historico.acertos, historico.total]);
 
   const listaFiltrada = useMemo(() => {
     if (!filtroCert) return questoes;
