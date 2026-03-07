@@ -1,15 +1,21 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, lazy, Suspense } from 'react';
 import { estudos, periodos, buscarEstudos } from './data/estudos';
+import { getFavoritos, getVistos, toggleFavorito, marcarComoVisto } from './lib/cursoStorage';
 import SearchBar from './components/SearchBar';
 import StudyCard from './components/StudyCard';
 import StudyDetail from './components/StudyDetail';
-import PaginaAtalhos from './components/PaginaAtalhos';
-import PaginaBackdoor from './components/PaginaBackdoor';
-import PaginaSegmentos from './components/PaginaSegmentos';
-import PaginaCertificacoes from './components/PaginaCertificacoes';
-import PaginaSimulado from './components/PaginaSimulado';
 import Login from './components/Login';
+
+const PaginaAtalhos = lazy(() => import('./components/PaginaAtalhos'));
+const PaginaAtalhosTeclado = lazy(() => import('./components/PaginaAtalhosTeclado'));
+const PaginaBackdoor = lazy(() => import('./components/PaginaBackdoor'));
+const PaginaSegmentos = lazy(() => import('./components/PaginaSegmentos'));
+const PaginaCertificacoes = lazy(() => import('./components/PaginaCertificacoes'));
+const PaginaAulasPraticas = lazy(() => import('./components/PaginaAulasPraticas'));
+const PaginaSimulado = lazy(() => import('./components/PaginaSimulado'));
+const PaginaSimulador = lazy(() => import('./components/PaginaSimulador'));
 import { initFirebaseUserAndPrefs, subscribePreferencias, savePreferencias } from './lib/firestorePrefs';
+import { IMAGEM_HEADER } from './data/imagens';
 import './App.css';
 
 const THEME_KEY = 'seguranca-app-theme';
@@ -23,6 +29,9 @@ export default function App() {
   const [categoriaAtiva, setCategoriaAtiva] = useState('');
   const [estudoAberto, setEstudoAberto] = useState(null);
   const [firebaseUserId, setFirebaseUserId] = useState(null);
+  const [favoritos, setFavoritos] = useState(() => getFavoritos());
+  const [soFavoritos, setSoFavoritos] = useState(false);
+  const [vistos, setVistos] = useState(() => getVistos());
   const temaFromFirestoreRef = useRef(false);
 
   useEffect(() => {
@@ -50,6 +59,35 @@ export default function App() {
     savePreferencias(firebaseUserId, { tema }).catch(() => {});
   }, [firebaseUserId, tema]);
 
+  useEffect(() => {
+    if (estudoAberto) {
+      marcarComoVisto(estudoAberto.id);
+      setVistos(getVistos());
+    }
+  }, [estudoAberto]);
+
+  const handleToggleFavorito = (id, e) => {
+    e.stopPropagation();
+    toggleFavorito(id);
+    setFavoritos(getFavoritos());
+  };
+
+  useEffect(() => {
+    const titulos = {
+      curso: 'Curso',
+      atalhos: 'Atalhos',
+      'atalhos-teclado': 'Atalhos de teclado',
+      segmentos: 'Proteção por segmento',
+      backdoor: 'Backdoor & Acesso remoto',
+      certificacoes: 'Certificações',
+      'aulas-praticas': 'Aulas Práticas',
+      simulado: 'Simulado',
+      simulador: 'Simulador',
+    };
+    const nome = titulos[pagina] || pagina;
+    document.title = `${nome} – Segurança Cibernética`;
+  }, [pagina]);
+
   const toggleTema = () => setTema((t) => (t === 'dark' ? 'light' : 'dark'));
 
   const handleLogin = () => {
@@ -65,8 +103,9 @@ export default function App() {
   const listaFiltrada = useMemo(() => {
     let resultado = buscarEstudos(busca);
     if (categoriaAtiva) resultado = resultado.filter((e) => e.periodoId === categoriaAtiva);
+    if (soFavoritos) resultado = resultado.filter((e) => favoritos.has(e.id));
     return resultado;
-  }, [busca, categoriaAtiva]);
+  }, [busca, categoriaAtiva, soFavoritos, favoritos]);
 
   if (!autenticado) {
     return <Login onLogin={handleLogin} />;
@@ -88,10 +127,13 @@ export default function App() {
         <div className="app__global-nav-links">
           {navLink('curso', 'Curso')}
           {navLink('atalhos', 'Atalhos')}
+          {navLink('atalhos-teclado', 'Atalhos de teclado')}
           {navLink('segmentos', 'Proteção por segmento')}
           {navLink('backdoor', 'Backdoor & Acesso remoto')}
           {navLink('certificacoes', 'Certificações')}
+          {navLink('aulas-praticas', 'Aulas Práticas')}
           {navLink('simulado', 'Simulado')}
+          {navLink('simulador', 'Simulador')}
         </div>
         <button
           type="button"
@@ -100,7 +142,8 @@ export default function App() {
           title={tema === 'dark' ? 'Usar tema claro' : 'Usar tema escuro'}
           aria-label={tema === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
         >
-          {tema === 'dark' ? '☀️ Claro' : '🌙 Escuro'}
+          <span className="app__theme-icon" aria-hidden="true">{tema === 'dark' ? '☀️' : '🌙'}</span>
+          <span className="app__theme-label">Tema {tema === 'dark' ? 'claro' : 'escuro'}</span>
         </button>
         <button
           type="button"
@@ -113,37 +156,59 @@ export default function App() {
         </button>
       </nav>
 
-      {pagina === 'atalhos' && <PaginaAtalhos />}
-
-      {pagina === 'segmentos' && <PaginaSegmentos />}
-
-      {pagina === 'backdoor' && <PaginaBackdoor />}
-
-      {pagina === 'certificacoes' && <PaginaCertificacoes />}
-
-      {pagina === 'simulado' && <PaginaSimulado firebaseUserId={firebaseUserId} />}
+      <Suspense fallback={<div className="app__loading" aria-live="polite">Carregando...</div>}>
+        {pagina === 'atalhos' && <PaginaAtalhos />}
+        {pagina === 'atalhos-teclado' && <PaginaAtalhosTeclado />}
+        {pagina === 'segmentos' && <PaginaSegmentos />}
+        {pagina === 'backdoor' && <PaginaBackdoor />}
+        {pagina === 'certificacoes' && <PaginaCertificacoes />}
+        {pagina === 'aulas-praticas' && <PaginaAulasPraticas />}
+        {pagina === 'simulado' && <PaginaSimulado firebaseUserId={firebaseUserId} />}
+        {pagina === 'simulador' && <PaginaSimulador />}
+      </Suspense>
 
       {pagina === 'curso' && (
         <>
           <header className="app__header">
+            <img
+              src={IMAGEM_HEADER}
+              alt=""
+              className="app__header-img"
+            />
             <h1 className="app__titulo">Curso de Segurança Cibernética</h1>
             <p className="app__subtitulo">Base de conhecimento – Formação profissional · 5 períodos · Material completo por disciplina</p>
             <p className="app__metodologia">Ementa, objetivos gerais e específicos, unidades temáticas, mentalidade profissional, prática e checklist de aprendizagem — nível faculdade de elite.</p>
+            <div className="app__progresso-wrap">
+              <span className="app__progresso-texto">
+                {vistos.size} de {estudos.length} disciplinas vistas
+              </span>
+              <div className="app__progresso-bar" role="progressbar" aria-valuenow={vistos.size} aria-valuemin={0} aria-valuemax={estudos.length}>
+                <div className="app__progresso-fill" style={{ width: `${(vistos.size / estudos.length) * 100}%` }} />
+              </div>
+            </div>
             <SearchBar value={busca} onChange={setBusca} placeholder="Buscar disciplina, tag ou tema..." />
             <nav className="app__filtros" aria-label="Filtrar por período">
               <button
                 type="button"
-                className={`app__filtro ${!categoriaAtiva ? 'app__filtro--ativo' : ''}`}
-                onClick={() => setCategoriaAtiva('')}
+                className={`app__filtro ${!categoriaAtiva && !soFavoritos ? 'app__filtro--ativo' : ''}`}
+                onClick={() => { setCategoriaAtiva(''); setSoFavoritos(false); }}
               >
                 Todos os períodos
+              </button>
+              <button
+                type="button"
+                className={`app__filtro app__filtro--favoritos ${soFavoritos ? 'app__filtro--ativo' : ''}`}
+                onClick={() => { setSoFavoritos(true); setCategoriaAtiva(''); }}
+                title="Ver só favoritos"
+              >
+                ★ Favoritos ({favoritos.size})
               </button>
               {periodos.map((p) => (
                 <button
                   key={p.id}
                   type="button"
                   className={`app__filtro ${categoriaAtiva === p.id ? 'app__filtro--ativo' : ''}`}
-                  onClick={() => setCategoriaAtiva(p.id)}
+                  onClick={() => { setCategoriaAtiva(p.id); setSoFavoritos(false); }}
                   style={categoriaAtiva === p.id ? { borderColor: p.cor, color: p.cor } : {}}
                 >
                   {p.nome} – {p.titulo}
@@ -154,11 +219,19 @@ export default function App() {
 
           <main className="app__main">
             {listaFiltrada.length === 0 ? (
-              <p className="app__vazio">Nenhum estudo encontrado. Tente outra busca ou categoria.</p>
+              <p className="app__vazio">
+                {soFavoritos ? 'Nenhum favorito. Clique na estrela (☆) em uma disciplina para adicionar.' : 'Nenhum estudo encontrado. Tente outra busca ou categoria.'}
+              </p>
             ) : (
               <div className="app__grid">
                 {listaFiltrada.map((estudo) => (
-                  <StudyCard key={estudo.id} estudo={estudo} onClick={setEstudoAberto} />
+                  <StudyCard
+                    key={estudo.id}
+                    estudo={estudo}
+                    onClick={setEstudoAberto}
+                    isFavorito={favoritos.has(estudo.id)}
+                    onToggleFavorito={(e) => handleToggleFavorito(estudo.id, e)}
+                  />
                 ))}
               </div>
             )}

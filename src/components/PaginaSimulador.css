@@ -1,0 +1,406 @@
+.simulador {
+  min-height: 100vh;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.simulador__header {
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.simulador__titulo {
+  font-size: clamp(1.35rem, 3.5vw, 1.75rem);
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.simulador__subtitulo {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+/* Dashboard de métricas (Segurança, Financeiro, Reputação) */
+.simulador__medidores {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  max-width: 520px;
+  margin: 0 auto 1.5rem;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+}
+
+.simulador__medidor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.simulador__medidor-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.simulador__medidor-bar {
+  height: 8px;
+  background: var(--bg-tag);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.simulador__medidor-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.simulador__medidor-fill--seg {
+  background: #10b981;
+}
+
+.simulador__medidor-fill--fin {
+  background: #3b82f6;
+}
+
+.simulador__medidor-fill--rep {
+  background: #8b5cf6;
+}
+
+.simulador__medidor-valor {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.simulador__main {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.simulador__etapa {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 16px var(--shadow);
+}
+
+.simulador__intro {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+}
+
+.simulador__etapa-titulo {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  color: var(--text-primary);
+}
+
+.simulador__etapa-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+.simulador__label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.simulador__input,
+.simulador__select {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.6rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.simulador__input:focus,
+.simulador__select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.simulador__setor-risco {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-tag);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+}
+
+/* Infraestrutura: uma escolha por categoria */
+.simulador__categoria {
+  margin-bottom: 1.5rem;
+}
+
+.simulador__categoria-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+}
+
+.simulador__opcoes-infra {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.simulador__opcoes-infra li {
+  margin-bottom: 0.5rem;
+}
+
+.simulador__opcao-infra {
+  display: block;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-card);
+  border-radius: 8px;
+  background: var(--bg-tag);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.simulador__opcao-infra:hover {
+  border-color: var(--accent);
+  background: var(--accent-alpha);
+}
+
+.simulador__opcao-infra--ativa {
+  border-color: var(--accent);
+  background: var(--accent-alpha);
+}
+
+.simulador__opcao-infra input {
+  margin-right: 0.5rem;
+}
+
+.simulador__opcao-infra-nome {
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.simulador__opcao-infra-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.simulador__opcao-infra-impacto {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.simulador__itens-ti {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.simulador__item-ti {
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  background: var(--bg-tag);
+  border: 1px solid var(--border-card);
+}
+
+.simulador__item-ti-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.simulador__item-ti-label input {
+  margin: 0;
+}
+
+.simulador__item-ti-nome {
+  flex: 1;
+}
+
+.simulador__item-ti-pontos {
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.simulador__item-ti-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0.35rem 0 0 1.5rem;
+  line-height: 1.4;
+}
+
+.simulador__etapa--evento {
+  padding: 1.75rem;
+}
+
+.simulador__evento-progresso {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.simulador__evento-texto {
+  font-size: 1rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+
+.simulador__pontuacao-atual {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.simulador__opcoes-evento {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.simulador__opcoes-evento li {
+  margin-bottom: 0.5rem;
+}
+
+.simulador__btn--opcao {
+  width: 100%;
+  text-align: left;
+  padding: 1rem 1rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.simulador__opcao-impacto {
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.simulador__btn {
+  padding: 0.65rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.simulador__btn--primario {
+  background: var(--accent);
+  color: #fff;
+}
+
+.simulador__btn--primario:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.simulador__btn--primario:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.simulador__btn--opcao {
+  background: var(--bg-tag);
+  color: var(--text-primary);
+  border: 2px solid var(--border-card);
+}
+
+.simulador__btn--opcao:hover {
+  border-color: var(--accent);
+  background: var(--accent-alpha);
+}
+
+/* Resultado */
+.simulador__resultado {
+  text-align: center;
+}
+
+.simulador__resultado--blindada {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.simulador__resultado--risco {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.simulador__resultado--comprometida {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.simulador__resultado .simulador__medidores {
+  margin: 1rem auto;
+}
+
+.simulador__resultado-empresa {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+}
+
+.simulador__resultado-mensagem {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+
+.simulador__resultado-dica {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0 0 1.5rem;
+}
+
+.simulador__resultado-dica strong {
+  color: var(--text-primary);
+}

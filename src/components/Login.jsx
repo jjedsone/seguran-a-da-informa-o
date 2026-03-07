@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { IMAGEM_LOGIN } from '../data/imagens';
 import './Login.css';
 
 const LOGIN_VALIDO = 'adm';
@@ -22,6 +23,11 @@ export default function Login({ onLogin }) {
   return (
     <div className="login">
       <div className="login__card">
+        <img
+          src={IMAGEM_LOGIN}
+          alt=""
+          className="login__img"
+        />
         <h1 className="login__titulo">Curso de Segurança Cibernética</h1>
         <p className="login__subtitulo">Entre para acessar o material</p>
         <form className="login__form" onSubmit={handleSubmit}>

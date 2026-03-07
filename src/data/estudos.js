@@ -593,19 +593,18 @@ Identificar, priorizar e corrigir falhas antes que sejam exploradas.
     periodoId: '5',
     titulo: 'Projeto Integrador – Segurança Cibernética e Forense',
     horas: 36,
-    resumo: 'Cenário completo: detecção, investigação, análise de malware, contenção e relatório final.',
-    tags: ['projeto final', 'forense', 'resposta a incidentes', 'relatório'],
+    resumo: 'Cenário integrado: ambiente simulado com incidente (ransomware, exfiltração ou invasão). Detecção (SIEM, tráfego, logs), investigação forense e de malware, contenção, erradicação, recuperação, relatório executivo e técnico com IOCs e defesa perante banca. Síntese do curso.',
+    tags: ['projeto final', 'forense', 'resposta a incidentes', 'relatório', 'SIEM', 'IOCs', 'malware'],
     conteudo: `# Projeto Integrador Final – Segurança Cibernética e Forense (36h)
 ## Objetivo
-Cenário real: incidente de segurança; aplicar todo o conhecimento do curso.
+Cenário realista: infraestrutura simulada sofre incidente; aplicar detecção, investigação (forense, tráfego, malware), resposta (contenção, erradicação, recuperação) e documentação (relatório executivo e técnico, IOCs, defesa).
 
 ## Conteúdo destrinchado
-- **Cenário**: rede corporativa com servidores, firewall, banco de dados.
-- **Detecção**: tráfego incomum, acessos inesperados, arquivos modificados.
-- **Investigação**: qual máquina, como começou, qual vulnerabilidade, quais dados.
-- **Análise de malware** (se aplicável): comportamento, conexões, arquivos alterados.
-- **Contenção e recuperação**: isolar, remover, corrigir, restaurar backup.
-- **Relatório final**: descrição, análise, impacto, medidas, recomendações.
+- **Ambiente**: rede, servidores, estações, firewall; incidente injetado (ransomware, exfiltração, invasão).
+- **Detecção**: SIEM, análise de tráfego, logs; triagem e abertura de caso.
+- **Investigação**: imagem forense, análise de tráfego (PCAP), análise de malware (estática/dinâmica), linha do tempo, causa raiz.
+- **Resposta**: contenção (isolar, bloquear), erradicação (remover malware, corrigir falhas), recuperação (backup, validação).
+- **Relatório**: executivo (gestão) e técnico (cronologia, IOCs, evidências, recomendações); apresentação e defesa perante banca.
 
 ## Formação final
 Ao concluir: analista de segurança, SOC, resposta a incidentes, auditor, forense, pentester.`,

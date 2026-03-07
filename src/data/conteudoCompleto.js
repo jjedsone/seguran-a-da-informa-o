@@ -443,35 +443,211 @@ Antes de agir, diagnosticar. Isso separa o técnico do profissional. Relatório 
   // ========== 2º PERÍODO ==========
   'p2-banco-dados': `# Banco de Dados (72h)
 ## Ementa
-Sistemas de armazenamento estruturado de dados: modelos, SGBD, linguagem SQL, segurança e auditoria. Ataques a bancos de dados (SQL Injection, acesso não autorizado) e controles.
+Sistemas de armazenamento estruturado de dados: modelos, SGBD, linguagem SQL, segurança e auditoria. Ataques a bancos de dados (SQL Injection, acesso não autorizado) e controles. Módulos do fundamento ao avançado: modelo relacional, SQL profissional, estrutura (normalização, índices), SQL Injection, defesa e segurança corporativa.
 
 ## Objetivos gerais
 - Compreender como os dados são armazenados, consultados e protegidos em SGBD.
-- Escrever consultas SQL básicas e reconhecer vulnerabilidades que levam a SQL Injection.
+- Escrever consultas SQL e reconhecer vulnerabilidades que levam a SQL Injection.
 - Aplicar controles de acesso, criptografia, backup e auditoria em ambiente de banco de dados.
+- Pensar como atacante (exploração) e como defensor (prepared statements, menor privilégio, WAF, auditoria).
 
 ## Objetivos específicos
-- Descrever modelo relacional (tabelas, registros, campos, chaves).
-- Usar SELECT, INSERT, UPDATE, DELETE e filtros (WHERE).
-- Explicar SQL Injection (entrada maliciosa concatenada na query) e mitigação (consultas parametrizadas, least privilege).
-- Listar boas práticas: usuário dedicado por aplicação, criptografia de dados sensíveis, backup e restauração testada, logs de acesso.
+- Descrever modelo relacional (tabela, linha, coluna, chave primária, chave estrangeira) e SGBD.
+- Usar SELECT, INSERT, UPDATE, DELETE, WHERE, JOIN, ORDER BY, GROUP BY e funções agregadas.
+- Explicar SQL Injection (tipos: login, UNION, error-based, blind) e ferramentas (SQLMap).
+- Aplicar defesa: consultas parametrizadas, validação de entrada, menor privilégio, WAF, logs.
+- Descrever segurança avançada: criptografia em repouso e em trânsito, roles, backup (full/incremental/diferencial), auditoria.
 
 ---
 
-## Unidade 1 – Modelo de dados e SGBD
-Banco de dados = conjunto organizado de dados. SGBD (MySQL, PostgreSQL, SQL Server, Oracle) controla armazenamento, consulta, integridade e permissões. Tabela = entidade; linha = registro; coluna = atributo; chave primária, chave estrangeira.
+## Módulo 1 — Fundamentos de dados / Modelo de dados e SGBD (10h)
 
-## Unidade 2 – Linguagem SQL
-SELECT (consulta), INSERT (inserir), UPDATE (atualizar), DELETE (excluir). WHERE para filtrar. JOIN para relacionar tabelas. Agregações (COUNT, SUM, AVG). Ordem e agrupamento (ORDER BY, GROUP BY).
+Aqui você entende como a informação nasce dentro de um sistema. Sem isso, SQL vira só comando decorado.
 
-## Unidade 3 – SQL Injection e mitigação
-SQL Injection: atacante injeta trechos de SQL em entrada do usuário; a aplicação concatena na query e o servidor executa. Resultado: leitura, alteração ou exclusão de dados; às vezes execução de comandos no SO. Mitigação: consultas parametrizadas/prepared statements; validação de entrada; princípio do menor privilégio; WAF e auditoria.
+### O que é um banco de dados
+Um banco de dados é um sistema estruturado de armazenamento de informação. Exemplo simples: tabela **usuarios** com colunas id, nome, email, senha; cada linha representa um registro real do mundo.
 
-## Unidade 4 – Segurança em banco de dados
-Controle de acesso por usuário e papel (role). Criptografia em repouso (TDE, column-level). Criptografia em trânsito (TLS para conexão). Backup regular e teste de restauração. Logs de acesso e alteração (auditoria). Dados valem dinheiro; proteger dados é proteger o coração do sistema.
+### O que é um SGBD
+SGBD = Sistema de Gerenciamento de Banco de Dados. Software que controla armazenamento, recuperação, acessos, integridade, consultas e logs. Exemplos: PostgreSQL, MySQL/MariaDB, SQL Server, Oracle.
 
-## Mentalidade profissional
-Grande parte dos ataques modernos busca dados, não apenas máquinas. Quem entende como os dados são armazenados e consultados sabe onde reforçar defesas e como investigar vazamentos.`,
+### Estrutura do modelo relacional (Codd, IBM – 1970)
+Organiza dados em **relações (tabelas)**. Tabela = entidade; linha = registro; coluna = atributo.
+
+### Chave primária (PRIMARY KEY)
+Identifica cada registro de forma única; nunca pode repetir (ex.: \`id_usuario\`).
+
+### Chave estrangeira (FOREIGN KEY)
+Liga duas tabelas. Ex.: tabela **pedidos** com \`id_usuario\` apontando para **usuarios** — cria relacionamento entre dados.
+
+### Integridade
+NOT NULL, UNIQUE, FOREIGN KEY: o banco garante consistência (ex.: pedido não pode apontar para usuário inexistente).
+
+### Armazenamento físico
+Dados em arquivos binários, páginas de memória, blocos de disco; data pages; índices internos para localizar registros rapidamente.
+
+### Laboratório 1
+Instalar PostgreSQL ou MySQL. Criar banco: \`CREATE DATABASE empresa;\` Criar tabela: \`CREATE TABLE usuarios (id SERIAL PRIMARY KEY, nome VARCHAR(100), email VARCHAR(100), senha VARCHAR(255));\` Inserir: \`INSERT INTO usuarios (nome,email,senha) VALUES ('Ana','ana@email.com','123');\` Consultar: \`SELECT * FROM usuarios;\`
+
+### Visão de segurança
+Cada banco contém credenciais, dados pessoais, financeiros, histórico — um tesouro digital. Atacante que entra pode copiar dados; muitos vazamentos famosos começaram por falha em banco ou aplicação web.
+
+### Exercício do Módulo 1
+Criar banco \`empresa\`, três tabelas (usuarios, clientes, pedidos), relacionar clientes com pedidos por chave estrangeira, inserir 5 registros em cada tabela.
+
+---
+
+## Módulo 2 — SQL na prática / Linguagem SQL (12h)
+
+SQL = Structured Query Language; linguagem universal de consulta a bancos.
+
+### SELECT — consulta
+\`SELECT * FROM usuarios;\` — todas as colunas. \`SELECT nome, email FROM usuarios;\` — colunas específicas (desempenho e segurança).
+
+### WHERE — filtro
+\`SELECT * FROM usuarios WHERE nome = 'Ana';\` Operadores: =, >, <, <>.
+
+### INSERT, UPDATE, DELETE
+\`INSERT INTO usuarios (nome,email,senha) VALUES ('Carlos','c@email.com','123');\` \`UPDATE usuarios SET email='novo@email.com' WHERE id=2;\` \`DELETE FROM usuarios WHERE id=2;\` Sem WHERE em UPDATE/DELETE altera ou apaga toda a tabela — erro crítico em produção.
+
+### ORDER BY
+\`SELECT * FROM usuarios ORDER BY nome;\` ou \`ORDER BY nome DESC;\`
+
+### Funções agregadas
+\`SELECT COUNT(*) FROM usuarios;\` \`SELECT SUM(valor) FROM pedidos;\` \`SELECT AVG(valor) FROM pedidos;\`
+
+### JOIN — cruzar tabelas
+\`SELECT usuarios.nome, pedidos.valor FROM usuarios JOIN pedidos ON usuarios.id = pedidos.id_usuario;\`
+
+### Agrupamento
+\`SELECT cliente_id, SUM(valor) FROM pedidos GROUP BY cliente_id;\`
+
+### Laboratório 2
+Criar tabelas clientes e pedidos, inserir dados, praticar JOIN e agregações. Visão de cibersegurança: toda aplicação faz consultas SQL; se mal construídas, surgem vulnerabilidades — a mais famosa é SQL Injection (coração do próximo módulo).
+
+---
+
+## Módulo 3 — Estrutura profissional de banco (10h)
+
+### Normalização
+Evita redundância. Exemplo ruim: cliente com telefone, telefone2, telefone3. Correto: tabela clientes + tabela telefones.
+
+### Índices
+\`CREATE INDEX idx_email ON usuarios(email);\` — aceleram buscas; sem índice a consulta fica lenta.
+
+### Integridade
+NOT NULL, UNIQUE, FOREIGN KEY garantem consistência.
+
+---
+
+## Módulo 4 — SQL Injection e exploração de banco (12h)
+
+Um dos ataques mais antigos da internet e ainda muito eficaz. Grande parte dos vazamentos ocorreu assim: o atacante engana a aplicação para executar SQL malicioso.
+
+### Como nasce um SQL Injection
+Login monta: \`SELECT * FROM usuarios WHERE email = 'entrada_usuario' AND senha = 'entrada_usuario'\`. Se o atacante digitar \`' OR 1=1 --\`, a consulta vira \`WHERE email='' OR 1=1 --\`; 1=1 é sempre verdadeiro — o banco retorna todos os usuários e a autenticação quebra.
+
+### Por que acontece
+Concatenar dados do usuário na consulta: \`query = "SELECT * FROM usuarios WHERE email='"+email+"'"\` — o banco não distingue dado de comando.
+
+### Tipos de SQL Injection
+- **Login**: quebra autenticação (payload \`' OR '1'='1\`).
+- **UNION**: extrai dados de outras tabelas (\`UNION SELECT usuario,senha FROM admin --\`).
+- **Error-based**: erros do banco revelam tabelas, estrutura, colunas.
+- **Blind**: sistema não mostra erro; atacante faz perguntas lógicas (\`AND 1=1\` / \`AND 1=2\`) e infere dados.
+
+### O que o ataque pode fazer
+Roubar banco inteiro, alterar ou apagar tabelas, criar usuários admin, às vezes executar comandos no SO.
+
+### Ferramenta: SQLMap
+\`sqlmap -u "http://site.com/produto?id=1"\` — testa vulnerabilidades automaticamente; usada por pentesters para testar antes de um invasor real.
+
+### Sinais de sistema vulnerável
+Mensagens de erro SQL na tela (ex.: "You have an error in your SQL syntax", ORA-01756, SQLSTATE[42000]); adicionar apóstrofo \`'\` e o sistema quebrar.
+
+### Laboratório
+Ambiente de teste: MySQL, XAMPP, DVWA (Damn Vulnerable Web Application). Criar login ligado ao banco, testar \`' OR 1=1 --\` e observar o comportamento.
+
+---
+
+## Módulo 5 — Defesa contra SQL Injection (12h)
+
+O banco precisa distinguir **dados** de **comandos**. Quando feito corretamente, SQL Injection praticamente desaparece.
+
+### Consultas parametrizadas (Prepared Statements)
+Nunca concatenar entrada do usuário. **Errado:** \`query = "SELECT * FROM users WHERE email='"+email+"'"\`. **Correto:** \`SELECT * FROM users WHERE email = ?\` — estrutura fixa, valor enviado separadamente; mesmo \`' OR 1=1 --\` é tratado só como texto.
+
+### Validação de entrada
+Aceitar apenas o esperado: idade → só números; e-mail → formato de e-mail. Reduz superfície de ataque.
+
+### Princípio do menor privilégio
+Aplicação não deve usar usuário root. Criar usuário limitado: \`CREATE USER app_user; GRANT SELECT, INSERT ON usuarios TO app_user;\` — se houver ataque, o dano fica limitado.
+
+### Separação de usuários
+Usuário da aplicação, de administração e de backup — cada um com permissões específicas.
+
+### WAF (Web Application Firewall)
+Filtra requisições HTTP; bloqueia padrões suspeitos. Exemplos: ModSecurity, Cloudflare, AWS WAF. Camada adicional; não substitui código seguro.
+
+### Logs e auditoria
+Registrar quem acessou, quando, quais consultas e alterações — essencial para investigação e compliance.
+
+### Laboratório
+Sistema de login com consultas parametrizadas, validação e usuário de banco limitado; testar \`' OR 1=1 --\` — o ataque não deve funcionar. Segurança é arquitetura: defesa nasce no projeto.
+
+---
+
+## Módulo 6 — Segurança avançada de banco (16h)
+
+Território de segurança corporativa: dados valem mais que os servidores.
+
+### Criptografia em repouso
+Dados protegidos no disco (ex.: TDE — Transparent Data Encryption em SQL Server, Oracle, PostgreSQL). Se alguém roubar o HD, os dados continuam criptografados.
+
+### Criptografia em trânsito
+Conexão aplicação–banco com TLS/SSL; sem isso a senha trafega em texto (sniffing).
+
+### Controle de acesso
+Roles e permissões: Administrador, Analista, Aplicação, Auditoria. Ex.: \`CREATE ROLE analista; GRANT SELECT ON clientes TO analista;\`
+
+### Segurança de senhas
+Nunca texto simples; armazenar hash (bcrypt, argon2, pbkdf2). Comparar hash no login.
+
+### Backup profissional
+**Full** (todo o banco), **incremental** (o que mudou desde o último), **diferencial** (desde o último full). Regra de ouro: backup que nunca foi testado não é backup — sempre testar restauração.
+
+### Logs de auditoria
+Registrar logins, consultas, alterações, exclusões — detecção de ataques, investigação, normas.
+
+### Proteção de dados sensíveis
+CPF, cartão, endereço, dados médicos: criptografia em nível de coluna ou segmentação de ambientes (dev/teste/produção).
+
+### Monitoramento
+Comportamento anômalo (ex.: usuário que normalmente consulta 10 registros tenta baixar milhões) — alerta.
+
+### Laboratório do módulo
+Banco \`seguranca_empresa\`, tabela usuarios (id, nome, email, senha_hash); hash de senha, usuário com privilégio limitado, backup e logs.
+
+---
+
+## Laboratório final (projeto)
+
+Construir sistema simples: banco \`empresa\`, tabelas usuarios, clientes, pedidos. Testar: consultas SQL, controle de acesso, criptografia, tentativa de SQL Injection e correção da vulnerabilidade.
+
+---
+
+## Mentalidade de profissional de elite
+
+Hackers atacam **dados** — dinheiro, identidade, segredos corporativos. Quem entende banco: investiga vazamentos, descobre ataques, protege aplicações, detecta manipulação. Em ataques famosos (Sony, Yahoo, Equifax) o problema muitas vezes não foi vírus avançado, e sim falha em banco ou aplicação web — uma porta pequena derrubou castelos gigantes. O coração de qualquer sistema digital é o dado; protegê-lo é proteger toda a organização.
+
+## Prática recomendada
+- Instalar PostgreSQL ou MySQL em VM; criar usuário com privilégio mínimo; escrever consulta parametrizada e explicar por que evita SQL Injection; configurar backup e testar restauração.
+
+## Checklist de aprendizagem
+- [ ] Explicar modelo relacional (tabela, chave primária, chave estrangeira) e papel do SGBD.
+- [ ] Escrever SELECT, INSERT, UPDATE, DELETE, WHERE, JOIN e uma agregação (COUNT/SUM/AVG).
+- [ ] Descrever como nasce um SQL Injection e um tipo (login, UNION, blind).
+- [ ] Aplicar defesa: prepared statement, validação, menor privilégio; citar WAF e auditoria.
+- [ ] Diferenciar criptografia em repouso e em trânsito; listar tipos de backup e a regra de testar restauração.`,
 
   'p2-etica-cidadania-sustentabilidade': `# Ética, Cidadania e Sustentabilidade (72h)
 ## Ementa
@@ -492,14 +668,29 @@ Grande parte dos ataques modernos busca dados, não apenas máquinas. Quem enten
 ## Unidade 1 – Ética aplicada à TI
 Diferença entre “poder fazer” e “dever fazer”. Uso de conhecimento apenas em contexto autorizado. Reporte responsável de vulnerabilidades. Confidencialidade e sigilo profissional. Consequências legais e de carreiras por má conduta.
 
-## Unidade 2 – Cidadania digital
-Direitos e deveres no ambiente digital. Privacidade, liberdade de expressão e limites. Combate à desinformação e ao uso malicioso de dados. Papel da educação e da política de uso aceitável.
+### 2 — Limites: teste autorizado x não autorizado
+**Autorizado**: escopo por escrito, autorização do dono do ativo. **Não autorizado**: acessar sistema ou dado sem permissão é crime (Art. 154-A CP). **Gray area**: teste sem documentar ou em sistema de terceiro “para ajudar” — não defensável.
 
-## Unidade 3 – Sustentabilidade
-Uso eficiente de energia e recursos em datacenters e equipamentos. Ciclo de vida de hardware; descarte e reciclagem. Sustentabilidade como critério em licitações e políticas de compra.
+### 3 — Cidadania digital
+**Direitos**: privacidade, LGPD, liberdade de expressão na lei. **Deveres**: não difamar, não invadir, não usar dados alheios sem base legal. **Desinformação**: verificar fonte. **Uso aceitável**: política da organização sobre e-mail, internet, dispositivos.
+
+### 4 — Sustentabilidade em TI
+**Energia**: eficiência em datacenters (PUE, virtualização). **Hardware**: ciclo de vida, descarte e reciclagem; dados apagados antes de descarte. **Compras**: critérios de sustentabilidade em licitações.
+
+### 5 — Responsabilidade
+**Cliente**: entregar o combinado, não expor dados. **Empregador**: seguir políticas, proteger ativos. **Sociedade**: não desenvolver ferramentas para uso malicioso; reportar crimes quando aplicável.
 
 ## Mentalidade profissional
-Segurança sem ética vira crime. O profissional conhece limites, leis e consequências; atua com responsabilidade perante clientes, empregadores e sociedade.`,
+Segurança sem ética vira crime. O profissional conhece limites, leis e consequências; atua com responsabilidade perante clientes, empregadores e sociedade.
+
+## Prática recomendada
+- Ler um código de conduta (ex.: (ISC)², ISACA) e comparar com cenário de reporte de vulnerabilidade.
+- Pesquisar um caso de condenação por crime cibernético e resumir o que foi considerado ilícito.
+
+## Checklist de aprendizagem
+- [ ] Explicar diferença entre poder fazer e dever fazer em segurança.
+- [ ] Citar três consequências (legais ou profissionais) de má conduta.
+- [ ] Descrever um passo ético para reporte responsável de vulnerabilidade.`,
 
   'p2-protocolos-redes': `# Protocolos de Redes (72h)
 ## Ementa
@@ -899,50 +1090,266 @@ Segurança é processo, não projeto com data de fim. Tecnologia, processos e pe
 ## Ementa
 Pentest em redes: planejamento, reconhecimento, varredura, enumeração, exploração, pós-exploração e relatório. Uso de ferramentas e metodologias em ambiente autorizado.
 
-## Objetivos e conteúdo
-Aplicar na prática as fases do Ethical Hacking em rede: mapear hosts e serviços, identificar vulnerabilidades (CVE, configuração, credenciais), explorar de forma controlada, avaliar impacto (pós-exploração) e documentar em relatório técnico com severidade e recomendações. Escopo e regras de engajamento; limites legais e éticos.`,
+## Objetivos gerais
+- Aplicar na prática as fases do Ethical Hacking em rede (mapear, identificar vulnerabilidades, explorar de forma controlada, documentar).
+- Respeitar escopo e regras de engajamento; limites legais e éticos.
+
+---
+
+### 1 — Planejamento e escopo
+**Documento de escopo**: o que pode e o que não pode ser testado (IPs, horários, tipos de teste). **Regras de engajamento**: até onde ir (ex.: sem DoS, sem alterar dados de produção). **Autorização**: contrato ou termo por escrito. **Ferramentas**: definir ambiente (VM, laboratório) e ferramentas (Nmap, Nessus/OpenVAS, Metasploit, etc.). **O que você aprende**: redigir um escopo de pentest de uma página com limites claros.
+
+### 2 — Reconhecimento e varredura
+**Reconhecimento**: OSINT (domínios, IPs, tecnologias); whois, DNS, sublist3r, theHarvester. **Varredura de portas**: Nmap ( -sV para versões, -sC para scripts). Identificar hosts ativos e serviços (22 SSH, 80 HTTP, 443 HTTPS, 3389 RDP, etc.). **O que você aprende**: rodar Nmap em um lab e interpretar saída (portas abertas, versões); listar possíveis vetores (ex.: RDP aberto, HTTP desatualizado).
+
+### 3 — Enumeração e identificação de vulnerabilidades
+**Enumeração**: usuários (SMTP, SMB), shares (SMB), SNMP, diretórios web (gobuster, dirb). **Vulnerabilidades**: varredura com Nessus/OpenVAS; consultar CVE para versões conhecidas; senhas fracas (Hydra, Medusa); configuração fraca (permissores excessivos, serviços default). **Priorizar**: crítico e alto primeiro. **O que você aprende**: correlacionar versão de um serviço com um CVE; anotar vulnerabilidade, impacto e prova de conceito.
+
+### 4 — Exploração e pós-exploração (controladas)
+**Exploração**: usar vulnerabilidade para obter acesso (exploit do Metasploit, credencial descoberta, upload de webshell). Sempre dentro do escopo. **Pós-exploração**: escalar privilégio (se autorizado), ver até onde o acesso chega (arquivos, banco, outros hosts); documentar sem causar dano. **O que você aprende**: explorar uma vulnerabilidade conhecida em VM (ex.: Metasploitable) e documentar os passos; não explorar em ambiente não autorizado.
+
+### 5 — Relatório técnico
+**Estrutura**: escopo, metodologia, resumo executivo; lista de vulnerabilidades com severidade (crítico, alto, médio, baixo), descrição, evidência (screenshot, comando), impacto e recomendação; conclusão. **Linguagem**: técnica para equipe; resumo para gestão. **O que você aprende**: escrever uma entrada de relatório completa para uma vulnerabilidade (título, severidade, descrição, evidência, recomendação).
+
+## Mentalidade profissional
+Pentest é teste de defesa, não ataque real. Objetivo é encontrar falhas para corrigir; sempre com autorização e dentro do escopo. Relatório bem feito vale mais que “quebrar tudo”.
+
+## Prática recomendada
+- Montar lab (ex.: Metasploitable, DVWA) e executar as fases do zero ao relatório.
+- Pesquisar um CVE recente e descrever impacto e mitigação.
+
+## Checklist de aprendizagem
+- [ ] Definir escopo e regras de engajamento de um pentest simulado.
+- [ ] Usar Nmap para mapear hosts e portas; interpretar resultados.
+- [ ] Identificar pelo menos uma vulnerabilidade (CVE ou configuração) e descrevê-la com evidência.
+- [ ] Redigir relatório com severidade e recomendações.`,
 
   'p4-protecao-perimetro': `# Proteção de Perímetro (72h)
 ## Ementa
 Firewall, IDS, IPS, segmentação de rede e DMZ. Primeira linha de defesa entre rede interna e externa.
 
-## Objetivos e conteúdo
-Compreender e configurar firewall (regras de permitir/bloquear por IP, porta, protocolo). Diferenciar IDS (detecção, alerta) e IPS (detecção e bloqueio). Aplicar segmentação (VLANs, zonas) para limitar blast radius. DMZ para serviços públicos (web, e-mail) isolados da rede interna. Políticas e hardening de equipamentos de perímetro.`,
+---
+
+### 1 — Firewall
+**Função**: controlar tráfego (permitir/bloquear) por IP, porta, protocolo e, em firewalls modernos, por aplicação e conteúdo. **Regras**: ordem importa (primeira regra que bater decide); política padrão (negar tudo e liberar o necessário, ou o inverso). **Tipos**: stateless (pacote a pacote) x stateful (acompanha sessão). **Exemplos**: permitir 443 (HTTPS) para internet; negar acesso da VLAN usuários à VLAN servidores exceto em portas específicas. **Ferramentas**: pfSense, OPNsense, iptables, firewalls de fabricantes. **O que você aprende**: desenhar um diagrama Internet–Firewall–DMZ–Rede interna e escrever cinco regras de firewall (ordem e justificativa).
+
+### 2 — IDS e IPS
+**IDS (Intrusion Detection System)**: monitora tráfego e gera **alerta** ao detectar assinatura ou anomalia; não bloqueia. **IPS (Intrusion Prevention System)**: detecta e **bloqueia** em linha. **Assinaturas**: regras (ex.: Snort, Suricata) para tráfego malicioso conhecido (exploit, C2, varredura). **Anomalia**: desvio de padrão (volume, destino, horário). **O que você aprende**: interpretar um alerta de IDS (qual regra disparou, qual pacote, IP origem/destino); decidir se é falso positivo ou real.
+
+### 3 — Segmentação (VLANs e zonas)
+**Objetivo**: limitar blast radius — se um segmento for comprometido, o ataque não se espalha livremente. **VLANs**: separar usuários, servidores, administração, visitantes. **Zonas**: no firewall, agrupar interfaces em zonas (ex.: LAN, DMZ, WAN) e definir política entre zonas (LAN pode acessar DMZ em 80/443; DMZ não acessa LAN). **O que você aprende**: propor segmentação para uma empresa (quatro VLANs) e justificar quem pode falar com quem.
+
+### 4 — DMZ (zona desmilitarizada)
+**Função**: hospedar serviços acessíveis da internet (web, e-mail, VPN) **isolados** da rede interna. Tráfego: Internet ↔ DMZ (permitido em portas específicas); DMZ ↔ Rede interna (restrito ou negado); Rede interna ↔ Internet (controlado). **Risco**: servidor na DMZ comprometido não deve ter acesso direto aos dados internos. **O que você aprende**: descrever o fluxo de uma requisição web do usuário da internet até o servidor na DMZ e por que a rede interna não fica exposta.
+
+### 5 — Hardening de perímetro
+**Equipamentos**: desativar serviços desnecessários (HTTP de administração em interface externa), trocar senhas padrão, atualizar firmware, usar HTTPS/SSH para gestão, restringir acesso de administração por IP. **Políticas**: documentar regras, revisar periodicamente, testar (varrer do exterior e ver o que está exposto). **O que você aprende**: checklist de hardening para um firewall (dez itens).
+
+## Mentalidade profissional
+Perímetro não é “firewall e pronto”. É firewall + IDS/IPS + segmentação + DMZ + políticas e hardening. Uma camada falha; as outras reduzem o impacto.
+
+## Prática recomendada
+- Simular regras de firewall em lab (pfSense ou GNS3) e testar conectividade entre segmentos.
+- Pesquisar uma regra Snort/Suricata para um CVE e explicar o que ela detecta.
+
+## Checklist de aprendizagem
+- [ ] Explicar diferença entre IDS e IPS e dar exemplo de uso de cada um.
+- [ ] Desenhar topologia com DMZ e justificar isolamento da rede interna.
+- [ ] Listar cinco boas práticas de hardening de firewall.`,
 
   'p4-seguranca-mobile-iot': `# Segurança em Redes Móveis e IoT (72h)
 ## Ementa
 Riscos em dispositivos móveis e na Internet das Coisas; vetores de ataque, botnets, boas práticas e controles.
 
-## Objetivos e conteúdo
-Descrever ameaças em redes móveis (2G a 5G) e em dispositivos IoT (câmeras, sensores, wearables). Vulnerabilidades comuns: senha padrão, firmware desatualizado, falta de criptografia. Botnets de IoT (Mirai e variantes). Boas práticas: alterar senha padrão, atualizar firmware, isolar IoT em rede dedicada, monitorar. Políticas de BYOD e MDM.`,
+---
+
+### 1 — Redes móveis (2G a 5G)
+**Evolução**: 2G (voz, SMS), 3G (dados), 4G (banda larga móvel), 5G (baixa latência, mais dispositivos). **Riscos**: interceptação (IMSI catcher em 2G/3G), roteamento malicioso, ataques a core da rede. **Dispositivos**: perda/roubo (dados no aparelho), malware, apps maliciosos, phishing em mobile. **O que você aprende**: listar três ameaças específicas a dispositivos móveis corporativos e um controle para cada.
+
+### 2 — IoT: o que é e por que é alvo
+**IoT**: câmeras, sensores, wearables, impressoras, roteadores, smart home, industrial. **Problemas comuns**: senha padrão ou inexistente, firmware desatualizado (sem patch), serviços de gestão expostos na internet, falta de criptografia, falta de segmentação. **Superfície de ataque**: milhões de dispositivos fracos; muitos nem são gerenciados por equipe de segurança. **O que você aprende**: pesquisar um modelo de câmera IP e listar vulnerabilidades conhecidas (CVE); propor três controles.
+
+### 3 — Botnets de IoT (Mirai e variantes)
+**Mirai**: malware que infecta IoT com senha padrão; dispositivos viram parte de botnet para DDoS e outros ataques. **Lição**: dispositivo “burro” pode virar arma; senha padrão e exposição na internet são vetores. **Variantes**: outros malwares seguem a mesma lógica (buscar IoT, tentar credenciais padrão, incorporar à botnet). **O que você aprende**: explicar em cinco linhas como o Mirai se propaga e qual o papel da senha padrão.
+
+### 4 — Boas práticas: IoT
+**Alterar senha padrão** antes de colocar em produção. **Atualizar firmware** (verificar se fabricante divulga patches). **Não expor** gestão à internet; acessar só de rede interna ou VPN. **Isolar** IoT em VLAN/rede dedicada; firewall entre IoT e rede crítica. **Monitorar**: tráfego anômalo (dispositivo falando com IP externo suspeito). **Inventário**: saber quais dispositivos existem e onde estão. **O que você aprende**: redigir uma política de uma página para aquisição e uso de dispositivos IoT na empresa.
+
+### 5 — Mobile: BYOD e MDM
+**BYOD (Bring Your Own Device)**: funcionário usa dispositivo pessoal para trabalho. **Riscos**: dados corporativos em aparelho não controlado; perda, malware, apps inseguros. **MDM (Mobile Device Management)**: ferramenta para aplicar política (senha, criptografia, apagar remotamente, listar apps). **Políticas**: o que pode e não pode (download de dados, uso de nuvem pessoal); consequências em caso de perda. **O que você aprende**: listar cinco controles que um MDM pode aplicar e por que cada um importa.
+
+### 6 — Celular na rede Wi‑Fi: como o atacante enxerga e como o sistema é comprometido
+
+Quando o celular está no mesmo Wi‑Fi que um notebook (atacante), ambos estão na **mesma rede local**. O atacante enxerga o aparelho como mais um host e pode tentar ataques na camada de rede e de aplicação. Conteúdo estritamente educacional; uso apenas em lab ou com autorização.
+
+**1 — Ver o celular na rede**  
+O atacante descobre hosts ativos na faixa de IP da rede. No notebook (Kali/Linux): \`nmap -sn 192.168.1.0/24\` (ping sweep) ou \`arp-scan -l\`. O celular aparece com um IP (ex.: 192.168.1.15). Ferramentas como Nmap, arp-scan, Fing (app no próprio celular) listam dispositivos na mesma LAN. Conclusão: **na mesma Wi‑Fi, o celular é “visível” por IP**; não há invisibilidade por ser móvel.
+
+**2 — Varredura no IP do celular**  
+\`nmap -sV -p- 192.168.1.15\` (ou faixa de portas reduzida). Celulares Android e iOS são **fechados por padrão**: poucas ou nenhuma porta TCP/UDP aberta para a rede local. Podem aparecer portas de serviços específicos (ex.: mídia, AirDrop em rede Apple, compartilhamento de arquivos se habilitado). Se não houver serviço escutando, não há “porta para explorar” diretamente; o ataque muda de estratégia.
+
+**3 — Rogue AP (ponto de acesso falso)**  
+O atacante faz o **notebook (ou placa externa) emitir um Wi‑Fi** com nome parecido ao legítimo (ex.: “Cafe_WiFi” ao lado do “Cafe_WiFi” real). Se a vítima **conectar nesse Wi‑Fi falso**, todo o tráfego do celular passa pelo atacante. **Como “bula” o sistema**: o celular acredita que está na internet, mas na verdade envia e recebe dados pelo notebook do atacante. Tráfego **não criptografado (HTTP)** pode ser lido; o atacante pode injetar páginas (phishing, malware) ou redirecionar DNS. **Resultado**: interceptação de senhas em sites HTTP, injeção de conteúdo malicioso, possível instalação de malware se o usuário clicar em algo. **Defesa**: não conectar em redes duplicadas ou suspeitas; usar VPN em Wi‑Fi público; preferir dados móveis para acesso sensível.
+
+**4 — MITM com ARP spoofing**  
+Mesmo na Wi‑Fi legítima, o atacante pode se colocar **entre o celular e o roteador**. Ferramentas como **ettercap**, **bettercap** ou **arpspoof** enviam respostas ARP falsas: o celular passa a enviar os pacotes para o MAC do notebook do atacante; o atacante encaminha para o roteador e recebe as respostas. **Como “bula” o sistema**: o tráfego da vítima **passa pelo atacante**. Tudo que for HTTP (não HTTPS) pode ser lido ou alterado. O atacante pode fazer **SSL stripping** (downgrade HTTPS para HTTP onde o usuário não percebe) e então capturar credenciais. **Resultado**: roubo de sessões, senhas, cookies; injeção de conteúdo. **Defesa**: usar apenas sites/apps com HTTPS; VPN de confiança na rede; rede com **DHCP Snooping** e **Dynamic ARP Inspection (DAI)** no switch (ambiente corporativo) reduz ARP spoofing.
+
+**5 — Exploração de apps com serviço na rede**  
+Se algum **app no celular** abrir uma porta na rede local (serviço que escuta – raro em apps comuns), o atacante poderia tentar explorar vulnerabilidade nesse serviço (buffer overflow, comando injetado, etc.). A maioria dos apps não expõe porta; quando expõe (ex.: app de transferência de arquivos, app de controle remoto mal configurado), o vetor existe. **Como “bula”**: exploit no serviço pode dar execução de código ou acesso a dados do app. **Defesa**: manter apps atualizados; não instalar apps de fonte desconhecida; revisar permissões (rede local).
+
+**6 — Resumo: como o “sistema” (celular) é comprometido na prática**  
+- **Pela rede direta**: raro – celular tem poucas portas abertas.  
+- **Rogue AP**: vítima conecta no Wi‑Fi falso → todo tráfego pelo atacante → MITM, phishing, possível malware.  
+- **ARP spoofing na Wi‑Fi legítima**: tráfego desviado para o atacante → leitura/injeção de conteúdo não criptografado ou SSL stripping.  
+- **Malware no celular** (instalado por enganação – app falso, phishing): aí o controle não é “só pela rede”; o malware abre backdoor e se conecta a servidor do atacante (C2).  
+
+**O que você aprende**: explicar em cinco passos como um atacante na mesma Wi‑Fi pode ver o celular e quais dois ataques (Rogue AP e MITM/ARP spoofing) permitem comprometer o tráfego; listar três defesas para o usuário do celular.
+
+## Mentalidade profissional
+Cada dispositivo conectado é um possível ponto de entrada. IoT e mobile ampliam a superfície; segurança precisa incluir inventário, política e segmentação, não só PC e servidor. Celular na mesma Wi‑Fi que um atacante é “mais um host” – visível por IP; a defesa passa por rede segura, não conectar em Wi‑Fi suspeito, HTTPS/VPN e aparelho atualizado.
+
+## Prática recomendada
+- Fazer inventário de dispositivos IoT em um ambiente (casa ou escritório) e classificar risco (senha padrão? exposto?).
+- Pesquisar um caso real de botnet de IoT (Mirai ou outro) e resumir impacto.
+
+## Checklist de aprendizagem
+- [ ] Citar três vulnerabilidades comuns em IoT e um controle para cada.
+- [ ] Explicar como uma botnet de IoT se forma e qual o papel da senha padrão.
+- [ ] Descrever o que é MDM e três controles que ele permite.
+- [ ] Explicar como o atacante vê o celular na mesma Wi‑Fi (nmap/arp-scan) e como Rogue AP e MITM (ARP spoofing) comprometem o tráfego; citar três defesas.`,
 
   'p4-tratamento-resposta-incidentes': `# Tratamento e Resposta a Incidentes (72h)
 ## Ementa
 Ciclo de resposta a incidentes: identificação, contenção, erradicação, recuperação e lições aprendidas. Planos, equipes e comunicação.
 
-## Objetivos e conteúdo
-Identificar incidente (alertas, logs, usuários). Conter (isolar host, bloquear IP, desligar serviço) para evitar propagação. Erradicar (remover malware, corrigir vulnerabilidade, trocar credenciais). Recuperar (restaurar de backup, validar integridade). Analisar pós-incidente (causa raiz, melhorias). Documentar e comunicar. Planos de resposta e runbooks; papel do SOC e da liderança.`,
+---
+
+### 1 — Identificação
+**Fontes**: alertas do SIEM, IDS, logs de autenticação e de endpoint, reclamação de usuário. **Triagem**: é incidente real ou falso positivo? Severidade (crítica, alta, média, baixa). **Primeiras perguntas**: o que foi afetado? Quando começou? Há propagação? **Documentar**: horário, quem detectou, primeiro indicador. **O que você aprende**: descrever um fluxo de detecção (alerta → triagem → abertura de caso) com exemplo de um tipo de incidente (ex.: ransomware).
+
+### 2 — Contenção
+**Objetivo**: impedir propagação e novo acesso do atacante. **Ações**: isolar hosts comprometidos (desconectar rede ou VLAN quarentena); bloquear IPs/domínios maliciosos no firewall/DNS; desabilitar contas comprometidas; desligar serviço explorado se necessário. **Comunicação**: avisar gestão; se dados pessoais, avaliar notificação (LGPD). **Documentar**: o que foi isolado/bloqueado e quando. **O que você aprende**: para um cenário (ex.: um host com ransomware), listar três ações de contenção em ordem e justificar.
+
+### 3 — Erradicação
+**Remover malware**: antivírus/EDR, ferramenta do fabricante ou reinstalação limpa se persistência complexa. **Corrigir vulnerabilidade**: patch, mudança de configuração que permitiu o ataque. **Trocar credenciais**: contas que possam ter sido comprometidas; senha forte e MFA onde possível. **Remover backdoors**: contas não autorizadas, tarefas agendadas, serviços instalados. **O que você aprende**: montar um checklist de erradicação (cinco itens) para um incidente de invasão por RDP.
+
+### 4 — Recuperação
+**Restaurar**: de backup anterior ao incidente; validar que o backup não está contaminado. **Testar restauração**: não esperar o incidente para descobrir que o backup falha. **Reconfigurar**: hardening e patches após restore. **Reestabelecer**: recolocar hosts na rede em etapas, com monitoramento. **Validar**: varredura e revisão de logs; só encerrar quando não houver evidência de atividade maliciosa. **O que você aprende**: descrever os critérios para considerar um incidente “encerrado” (quem valida, o que verificar).
+
+### 5 — Lições aprendidas e plano de resposta
+**Lições aprendidas**: o que funcionou, o que falhou, o que melhorar (detecção, resposta, backup, treinamento). Inserir no relatório e em plano de ação. **Plano de resposta a incidentes**: documento que define papéis, etapas, contatos, critérios de escalação. **Runbooks**: procedimentos passo a passo para cenários comuns (ex.: ransomware, phishing em massa). **SOC**: equipe que monitora, tria e responde; integração com liderança e outras áreas. **O que você aprende**: esboçar a estrutura de um plano de resposta (cinco seções) e um runbook de uma página para “detecção de ransomware”.
+
+## Mentalidade profissional
+Resposta a incidentes é processo, não improviso. Quem tem plano e runbooks age mais rápido e com menos erro; quem documenta melhora no próximo incidente.
+
+## Prática recomendada
+- Participar de um exercício de mesa (tabletop) de resposta a incidentes (cenário, decisões em grupo).
+- Revisar um caso real (reportagem ou estudo) e mapear as fases: identificação, contenção, erradicação, recuperação.
+
+## Checklist de aprendizagem
+- [ ] Listar as cinco fases do ciclo de resposta e uma ação principal em cada.
+- [ ] Diferenciar contenção e erradicação com exemplos.
+- [ ] Descrever o que é um runbook e dar um exemplo de uso.`,
 
   'p4-projeto-integrador-defesa': `# Projeto Integrador – Defesa e Resposta a Incidentes (36h)
 ## Ementa
 Simulação de ambiente corporativo com incidente de segurança: detecção, análise, contenção, erradicação e relatório. Integração de cybersecurity, pentest, perímetro e resposta a incidentes.
 
-## Objetivos e conteúdo
-Ambiente simulado (servidores, rede, firewall, estações). Cenário de ataque (invasão, malware ou exfiltração). Equipe detecta (monitoramento, logs, tráfego), analisa, contém e erradica. Produz relatório: cronologia, causa, impacto, ações tomadas, recomendações. Prática de trabalho em equipe e comunicação sob pressão.`,
+---
+
+### 1 — Ambiente e cenário
+**Montar ou usar**: rede com servidores (arquivos, banco, e-mail ou diretório), estações, firewall; opcional: IDS, SIEM ou agregador de logs. **Cenário de ataque**: definir um tipo (invasão por vulnerabilidade, malware, exfiltração de dados) e “injetar” de forma controlada (ex.: executar um script que simula comportamento malicioso ou explorar uma VM vulnerável). **Documentar**: como o ataque começou, em qual host, em qual momento — para depois reconstruir na análise. **O que você aprende**: desenhar a topologia do lab e descrever o cenário de ataque em um parágrafo.
+
+### 2 — Detecção
+**Fontes**: logs do firewall, do servidor, do SO (Windows Event, syslog); tráfego (Wireshark, NetFlow) se disponível; alertas se houver IDS/SIEM. **Triagem**: o alerta ou o log indica incidente real? Severidade? **Primeiras perguntas**: o que foi afetado? Quando? Há propagação? **O que você aprende**: identificar o primeiro indicador do seu cenário (qual log ou tráfego) e anotar data/hora e host.
+
+### 3 — Análise (investigação básica)
+**Linha do tempo**: ordenar eventos por data/hora (logs, tráfego). **Causa raiz**: por onde o atacante entrou? Qual vulnerabilidade ou vetor? Qual primeiro host ou conta? **Evidências**: anotar IPs, hashes, trechos de log relevantes (IOCs). Não é necessário forense avançada; o foco é correlação de logs e tráfego para entender o que aconteceu. **O que você aprende**: montar uma cronologia de pelo menos cinco eventos e escrever um parágrafo de causa raiz.
+
+### 4 — Contenção e erradicação
+**Contenção**: isolar host(s) comprometido(s), bloquear IP malicioso no firewall (se aplicável), desabilitar conta comprometida. **Erradicação**: remover malware ou corrigir vulnerabilidade explorada; trocar senhas se credenciais foram usadas. No lab, pode ser “restaurar VM” ou “aplicar patch e remover backdoor”. **O que você aprende**: listar as ações de contenção e erradicação que você executou no cenário e o resultado (ataque parou? acesso removido?).
+
+### 5 — Relatório e comunicação
+**Relatório**: cronologia, causa raiz, impacto (o que foi afetado, quais dados em risco), ações tomadas (contenção, erradicação), recomendações (hardening, monitoramento, backup). **Comunicação**: simular comunicação com “gestão” (resumo em uma página) e com “equipe técnica” (detalhes para quem for continuar o trabalho). **Trabalho em equipe**: dividir papéis (quem monitora, quem analisa logs, quem contém, quem redige); prática de comunicação sob pressão. **O que você aprende**: redigir relatório de uma a duas páginas e um resumo executivo de um parágrafo.
+
+## Mentalidade profissional
+Este projeto integra o que você viu em Cybersecurity, Pentest, Perímetro e Resposta a Incidentes em um único fluxo: detectar, analisar, conter, erradicar e documentar. É a base do que um analista de SOC faz no dia a dia.
+
+## Prática recomendada
+- Usar lab isolado; repetir o cenário variando o tipo de ataque (malware vs invasão vs exfiltração) para treinar detecção e resposta.
+- Cronometrar o tempo desde a detecção até a contenção e discutir como reduzir (runbooks, ferramentas).
+
+## Checklist de aprendizagem
+- [ ] Descrever o ambiente simulado e o cenário de ataque injetado.
+- [ ] Explicar como o incidente foi detectado e qual foi a causa raiz.
+- [ ] Listar ações de contenção e erradicação executadas.
+- [ ] Entregar relatório com cronologia, causa, impacto, ações e recomendações.`,
 
   'p5-analise-malwares': `# Análise de Malwares (36h)
 ## Ementa
 Tipos de malware (vírus, trojan, ransomware, spyware); vetores de infecção; técnicas de ofuscação; análise estática e dinâmica (sandbox); relatório de análise.
 
-## Objetivos e conteúdo
-Identificar como malware chega (e-mail, download, vulnerabilidade, USB). Análise estática: strings, imports, estrutura do binário, sem executar. Análise dinâmica: executar em ambiente controlado (sandbox/VM isolada); observar arquivos criados, registro, rede, processos. Documentar comportamento (IOCs, artefatos) para detecção e resposta. Ética e ambiente seguro (nunca em rede de produção).`,
+---
+
+### 1 — Tipos de malware e vetores
+**Tipos**: vírus (replicação), trojan (aparenta ser legítimo), ransomware (criptografa e cobra resgate), spyware (coleta dados), backdoor (acesso remoto). **Vetores**: e-mail (anexo, link), download malicioso, exploração de vulnerabilidade (RDP, servidor web), USB, drive-by download. **O que você aprende**: para cada tipo, dar um exemplo real e um vetor comum; explicar por que ransomware costuma chegar por e-mail ou RDP.
+
+### 2 — Ofuscação e persistência
+**Ofuscação**: empacotamento, criptografia do payload, strings ofuscadas — para dificultar análise estática e evasão de AV. **Persistência**: registro (Run keys), tarefas agendadas, serviços, arquivos em pastas de autostart; objetivo do malware é voltar após reinício. **O que você aprende**: listar três mecanismos de persistência no Windows e onde procurar (registro, pastas, agendador).
+
+### 3 — Análise estática (sem executar)
+**Strings**: extrair texto do binário (URLs, IPs, caminhos, chaves de registro) — ferramenta \`strings\` ou similar. **Imports**: DLLs e funções que o executável usa (rede, arquivo, registro) — PEview, pestudio. **Recursos**: ícones, outros arquivos embutidos. **Hash**: MD5, SHA-256 para identificar amostra e buscar em VirusTotal ou bases de IOCs. **O que você aprende**: abrir um PE (Windows) no pestudio ou PEview e anotar imports e strings suspeitas; calcular hash e buscar no VirusTotal.
+
+### 4 — Análise dinâmica (sandbox)
+**Ambiente**: VM ou sandbox isolada (Cuckoo, Any.Run, Joe Sandbox); **nunca** em rede de produção. **Executar** a amostra e observar: arquivos criados/alterados, chaves de registro, processos filhos, conexões de rede, consultas DNS. **Relatório da sandbox**: já traz muitos IOCs (hashes, IPs, URLs, mutex, paths). **O que você aprende**: submeter uma amostra (de repositório de samples para estudo) ao Cuckoo ou Any.Run e preencher uma tabela de IOCs (hash, IP, URL, comportamento em uma linha).
+
+### 5 — IOCs e relatório
+**IOCs (Indicators of Compromise)**: hashes (arquivo, dropped files), IPs e domínios (C2, download), URLs, paths, chaves de registro, mutex. **Uso**: alimentar SIEM, firewall e EDR para detecção e bloqueio. **Relatório de análise**: resumo do comportamento (o que o malware faz), vetor provável, IOCs em tabela, recomendação (bloquear IPs, procurar por hash no ambiente). **Ética**: só analisar amostras em ambiente controlado e com autorização; nunca em rede de produção. **O que você aprende**: redigir um relatório de uma página para uma amostra (comportamento, IOCs, recomendação).
+
+## Mentalidade profissional
+Análise de malware serve para entender o ataque e gerar IOCs que protejam a rede. Ambiente sempre isolado; documentação clara para que outros possam usar os IOCs.
+
+## Prática recomendada
+- Usar repositórios de samples para educação (ex.: MalwareBazaar, amostras de cursos); nunca baixar malware “na solta” em máquina não isolada.
+- Comparar análise estática e dinâmica da mesma amostra: o que a estática não revelou e a dinâmica mostrou?
+
+## Checklist de aprendizagem
+- [ ] Diferenciar análise estática e dinâmica e citar duas ferramentas para cada.
+- [ ] Extrair pelo menos três IOCs de uma amostra (hash, IP ou URL) e descrever o comportamento em uma frase.
+- [ ] Redigir relatório de análise com comportamento, IOCs e recomendação.`,
 
   'p5-pericia-forense': `# Análise e Perícia Forense Computacional (72h)
 ## Ementa
 Coleta e preservação de evidências digitais; imagem forense; análise de mídia, arquivos e logs; reconstrução de linha do tempo e relatório pericial com validade técnica e jurídica.
 
-## Objetivos e conteúdo
-Princípios: não alterar original; documentar toda ação; cadeia de custódia. Criar imagem forense (bit-a-bit) antes de analisar. Análise de arquivos (incluindo apagados), sistema de arquivos, registro (Windows), logs. Reconstruir sequência de eventos (quem, quando, o quê). Relatório pericial: metodologia, evidências, conclusões. Noções de admissibilidade em processo.`,
+---
+
+### 1 — Princípios e ordem de volatilidade
+**Não alterar o original**: toda análise em cópia ou imagem; o original fica intocado e armazenado com controle de acesso. **Documentar toda ação**: quem fez o quê, quando, com qual ferramenta — rastreabilidade. **Cadeia de custódia**: quem coletou, quem transportou, quem armazenou, quem acessou; quebra de custódia pode inviabilizar evidência em processo. **Ordem de volatilidade**: preservar primeiro o que se perde mais rápido (RAM, conexões, processos), depois disco, logs. **O que você aprende**: explicar por que “trabalhar no original” invalida a evidência; descrever o que é cadeia de custódia em três linhas.
+
+### 2 — Imagem forense
+**Imagem bit-a-bit**: cópia sector a sector do disco (dd, FTK Imager, Guymager); gera arquivo .dd ou .e01. **Hash**: calcular SHA-256 da imagem e do disco original; devem coincidir (integridade). **Documentação**: modelo do disco, número de série, capacidade; data/hora da coleta; local de armazenamento da imagem. **O que você aprende**: criar imagem de um disco virtual (ex.: VDI) com FTK Imager ou dd; verificar hash; abrir a imagem no Autopsy sem tocar no “original”.
+
+### 3 — Análise de mídia e arquivos
+**Sistema de arquivos**: estrutura (NTFS, ext4); arquivos apagados (ainda recuperáveis até sobrescrita); metadados (data de criação, modificação, acesso). **Arquivos suspeitos**: extensão, assinatura real (magic bytes), conteúdo; arquivo ofuscado ou em local anômalo. **Registro (Windows)**: Run keys, serviços, últimas chaves acessadas; ferramentas (RegEdit, RegRipper). **O que você aprende**: no Autopsy ou similar, localizar um arquivo apagado e um artefato de interesse (ex.: entrada no registro); anotar caminho e data.
+
+### 4 — Análise de logs e linha do tempo
+**Logs**: do SO (Windows Event, syslog), de aplicação, de firewall; quem acessou, quando, o quê. **Linha do tempo**: reunir eventos de disco, registro e logs em ordem cronológica (ferramentas: log2timeline/Plaso, Timesketch ou planilha). **Objetivo**: reconstruir sequência — quem fez o quê, quando, em qual host. **O que você aprende**: montar uma timeline de pelo menos 10 eventos a partir de um conjunto de logs ou artefatos; identificar o primeiro evento malicioso.
+
+### 5 — Relatório pericial e admissibilidade
+**Relatório pericial**: metodologia (como a coleta e a análise foram feitas), evidências (o que foi encontrado, com referência a arquivo/hash/log), conclusões (respostas às perguntas do caso). Linguagem técnica mas clara. **Admissibilidade**: noções de que a evidência digital pode ser questionada (alteração, custódia, método); documentação e hash servem para demonstrar integridade e método. **O que você aprende**: esboçar a estrutura de um relatório pericial (metodologia, evidências, conclusões) e redigir um parágrafo de conclusão para um cenário fictício.
+
+## Mentalidade profissional
+Forense não é “achar algo no disco”; é preservar, documentar e analisar com método para que o resultado seja defensável técnica e juridicamente. Cadeia de custódia e não alterar o original são inegociáveis.
+
+## Prática recomendada
+- Praticar em laboratório com imagens forenses de desafios (ex.: desafios de forense disponíveis online) ou com disco virtual que você mesmo “contaminou” com artefatos.
+- Pesquisar um caso judicial em que evidência digital foi aceita ou rejeitada e o motivo.
+
+## Checklist de aprendizagem
+- [ ] Explicar os três princípios: não alterar original, documentar toda ação, cadeia de custódia.
+- [ ] Descrever como criar e validar (hash) uma imagem forense.
+- [ ] Montar uma linha do tempo a partir de logs/artefatos e redigir conclusão em um parágrafo.`,
 
   'p5-auditoria-conformidade': `# Auditoria e Conformidade em Segurança Cibernética (72h)
 
@@ -1031,20 +1438,218 @@ Conformidade não é “documento para mostrar na auditoria”. É **governança
 ## Ementa
 Guerra cibernética: atores estatais, espionagem, ataques a infraestrutura crítica, operações de influência e defesa cibernética nacional.
 
-## Objetivos e conteúdo
-Definir guerra cibernética e operações cibernéticas ofensivas/defensivas. Espionagem e roubo de propriedade intelectual e dados de Estado. Ataques a energia, saúde, financeiro, transporte. Papel de agências e forças de defesa. Noções de direito internacional e atribuição. Impacto geopolítico e na segurança nacional.`,
+---
+
+### 1 — O que é guerra cibernética
+**Definição**: uso de operações no ciberespaço por atores estatais (ou com apoio estatal) para atingir objetivos políticos, militares ou econômicos. **Ofensiva**: ataques para degradar, espionar ou influenciar. **Defensiva**: proteção de redes, sistemas e dados nacionais; detecção e resposta a intrusões. **Diferença** em relação a crime cibernético: atores (Estado vs criminosos), motivação (estratégica vs lucro) e recursos. **O que você aprende**: em três linhas, diferenciar guerra cibernética de um ataque de ransomware criminoso.
+
+### 2 — Espionagem e roubo de ativos
+**Espionagem cibernética**: acesso não autorizado a segredos de Estado, propriedade intelectual, dados de empresas estratégicas (defesa, energia, saúde, tecnologia). **Atores**: agências de inteligência; grupos ligados a Estados (APT). **Alvos**: redes governamentais, contratistas de defesa, universidades, indústria. **Impacto**: perda de vantagem competitiva, risco à segurança nacional. **O que você aprende**: pesquisar um caso real de espionagem cibernética atribuída a um Estado (ex.: APT) e resumir alvo, método e impacto.
+
+### 3 — Ataques a infraestrutura crítica
+**Setores**: energia (elétrica, petróleo e gás), saúde, financeiro, transporte, água, telecomunicações, governo. **Risco**: paralisação ou sabotagem afeta população e economia. **Exemplos**: ataques a redes elétricas (Ukraine 2015, 2016), hospitais (ransomware), sistemas financeiros. **Defesa**: segmentação, monitoramento, planos de contingência, cooperação público-privada. **O que você aprende**: listar três setores de infraestrutura crítica e um tipo de ataque ou ameaça para cada.
+
+### 4 — Operações de influência e desinformação
+**Influência**: uso de redes sociais, bots e campanhas para manipular opinião, eleições ou estabilidade. **Desinformação**: divulgação de informação falsa para confundir ou polarizar. **Fake news, deepfakes**: desafio para confiança na informação. **Resposta**: educação midiática, verificação de fatos, resiliência das instituições. **O que você aprende**: explicar por que “segurança cibernética” inclui desinformação e qual o limite entre defesa técnica e liberdade de expressão.
+
+### 5 — Atribuição, direito internacional e defesa nacional
+**Atribuição**: identificar quem está por trás de um ataque (Estado, grupo, indivíduo) — difícil no ciberespaço (proxy, false flag). Técnicas: análise de TTPs, infraestrutura, linguagem. **Direito internacional**: aplicação de leis de guerra e soberania ao ciberespaço ainda em evolução; normas voluntárias (ONU, etc.). **Defesa cibernética nacional**: papel de agências (Ciber do Exército, Marinha, Aeronáutica; agências civis); proteção de redes governamentais e de infraestrutura crítica; cooperação internacional. **O que você aprende**: citar duas dificuldades da atribuição de ataques cibernéticos e por que isso importa para a resposta (sanção, retaliação, diplomacia).
+
+## Mentalidade profissional
+Cyberwar não é ficção; é realidade geopolítica. O profissional de segurança precisa entender o contexto (atores, motivações, infraestrutura crítica) para priorizar defesas e participar de discussões sobre política e estratégia.
+
+## Prática recomendada
+- Acompanhar notícias sobre ataques a infraestrutura crítica e operações de APT; classificar por tipo (espionagem, sabotagem, influência).
+- Pesquisar a estrutura de defesa cibernética do Brasil (quem faz o quê).
+
+## Checklist de aprendizagem
+- [ ] Definir guerra cibernética e diferenciar de crime cibernético.
+- [ ] Citar três setores de infraestrutura crítica e um exemplo de ameaça para cada.
+- [ ] Explicar por que a atribuição de ataques cibernéticos é difícil e importante.`,
 
   'p5-mitigacao-vulnerabilidades': `# Mitigação de Vulnerabilidades (72h)
 ## Ementa
 Identificação (varredura, pentest, auditoria), classificação (CVSS, risco), correção (patch, configuração, hardening) e gestão contínua de vulnerabilidades.
 
-## Objetivos e conteúdo
-Fonte de vulnerabilidades: software desatualizado, má configuração, senha fraca. Varredura automatizada e análise manual. Priorizar por criticidade e contexto. Corrigir: atualizar, aplicar hardening, segmentar. Reavaliar após correção. Programa contínuo de gestão de vulnerabilidades (VM). Integração com aquisição e desenvolvimento (secure SDLC).`,
+---
+
+### 1 — Fontes de vulnerabilidades
+**Software desatualizado**: versões antigas com CVEs conhecidos; atacantes exploram atraso de patch. **Má configuração**: serviços desnecessários, permissões excessivas, senhas padrão, configurações de desenvolvimento em produção. **Senha fraca**: brute force, vazamentos; MFA e política de senha reduzem risco. **Dependências**: bibliotecas e pacotes com vulnerabilidades (ex.: npm, pip); varredura de dependências (SAST/SCA). **O que você aprende**: listar cinco fontes comuns de vulnerabilidade em um ambiente corporativo e um exemplo para cada.
+
+### 2 — Identificação: varredura e auditoria
+**Varredura automatizada**: Nessus, OpenVAS, Qualys — varre rede/servidores e compara com base de CVEs; gera relatório de vulnerabilidades. **Pentest**: teste de intrusão autorizado; encontra falhas de configuração e lógica que o scanner não cobre. **Auditoria**: revisão manual de configurações (benchmarks CIS, hardening guides). **Inventário**: saber o que existe (ativos, software, versões) para saber o que varrer. **O que você aprende**: interpretar um relatório de varredura (uma vulnerabilidade crítica e uma alta): CVE, descrição, recomendação.
+
+### 3 — Classificação: CVSS e priorização
+**CVSS (Common Vulnerability Scoring System)**: pontuação de 0 a 10 (e severidade: baixo, médio, alto, crítico) com base em vetor de ataque, complexidade, privilégios necessários, impacto. **Contexto**: mesma CVE pode ser crítica em um sistema exposto na internet e média em um sistema interno; priorizar por criticidade **e** contexto (exposição, valor do ativo). **SLA de correção**: ex.: crítico em 7 dias, alto em 30 dias; documentar exceções (mitigação alternativa, risco aceito). **O que você aprende**: consultar um CVE no NVD (nvd.nist.gov), anotar score e vetor; decidir se seria crítico ou alto no seu contexto (ex.: servidor web público).
+
+### 4 — Correção e mitigação
+**Patch**: atualizar software para versão que corrige a CVE; testar em homologação antes de produção. **Configuração**: desativar serviço, restringir acesso, aplicar workaround (ex.: desabilitar recurso vulnerável). **Hardening**: seguir guia de endurecimento (CIS, vendor); reduz superfície de ataque. **Segmentação**: isolar sistema que não pode ser corrigido de imediato; reduzir blast radius. **O que você aprende**: para uma vulnerabilidade “conhecida mas sem patch”, listar três medidas de mitigação possíveis.
+
+### 5 — Programa contínuo e Secure SDLC
+**Ciclo de gestão de vulnerabilidades**: inventariar → varrer → priorizar → corrigir/mitigar → reavaliar (nova varredura); repetir continuamente. **Integração**: aquisição (exigir que fornecedor informe vulnerabilidades); desenvolvimento (secure SDLC — análise de código, dependências, testes de segurança antes do deploy). **Métricas**: tempo médio para corrigir por severidade; quantidade de vulnerabilidades em aberto; tendência. **O que você aprende**: esboçar um fluxo de “descoberta de vulnerabilidade até correção” em cinco etapas e indicar quem é responsável em cada uma (ex.: TI, segurança, desenvolvimento).
+
+## Mentalidade profissional
+Vulnerabilidades sempre existirão; o objetivo é conhecê-las, priorizá-las e tratá-las de forma contínua. Varredura sem correção não protege; correção sem priorização desperdiça recurso.
+
+## Prática recomendada
+- Rodar uma varredura em lab (OpenVAS ou Nessus em VM) e gerar relatório; classificar as dez primeiras vulnerabilidades por prioridade no contexto do lab.
+- Pesquisar um CVE recente de alto impacto e descrever: vetor, impacto, mitigação.
+
+## Checklist de aprendizagem
+- [ ] Explicar o que é CVSS e como usar a pontuação na priorização.
+- [ ] Listar três formas de “corrigir” uma vulnerabilidade (patch, configuração, mitigação).
+- [ ] Descrever o ciclo de gestão de vulnerabilidades em quatro etapas.`,
 
   'p5-projeto-integrador-final': `# Projeto Integrador Final – Segurança Cibernética e Forense (36h)
 ## Ementa
-Cenário integrado: infraestrutura simulada sofre incidente (invasão e/ou malware). Detecção, investigação (incluindo análise de tráfego e forense), contenção, erradicação, recuperação e relatório final. Síntese do curso.
+Cenário integrado: infraestrutura simulada sofre incidente (invasão e/ou malware). Detecção, investigação (análise de tráfego, forense digital, análise de malware), contenção, erradicação, recuperação e relatório executivo e técnico. Síntese e consolidação de todo o curso: analista de segurança, SOC, resposta a incidentes e forense computacional.
 
-## Objetivos e conteúdo
-Ambiente: rede, servidores, estações, firewall, possivelmente honeypot. Incidente injetado (ex.: ransomware, exfiltração). Equipe: detecta (SIEM, tráfego, logs), investiga (forense, malware), contém, erradica, recupera. Relatório executivo e técnico: cronologia, causa raiz, impacto, IOCs, recomendações. Apresentação e defesa. Consolida competências de analista de segurança, SOC, resposta a incidentes e forense.`,
+## Objetivos gerais
+- Integrar em um único cenário realista as competências de detecção, investigação, resposta a incidentes e forense.
+- Produzir relatório executivo (gestão) e técnico (equipe/auditoria) com cronologia, causa raiz, IOCs e recomendações.
+- Defender o trabalho perante banca: metodologia, evidências e conclusões.
+
+## Objetivos específicos
+- Montar ou utilizar ambiente simulado (rede, servidores, estações, firewall, opcional: honeypot) e injetar incidente controlado (ransomware, exfiltração, invasão).
+- Detectar o incidente usando SIEM, análise de tráfego (PCAP/NetFlow) e logs.
+- Investigar: forense (imagem de disco, memória, logs), análise de malware (estática/dinâmica), linha do tempo.
+- Aplicar ciclo de resposta: contenção, erradicação, recuperação e lições aprendidas.
+- Documentar IOCs (Indicators of Compromise), causa raiz, impacto e recomendações.
+- Redigir relatório executivo (resumo para gestão) e técnico (detalhes para equipe e auditoria).
+- Apresentar e defender o projeto perante banca.
+
+---
+
+## Unidade 1 — Ambiente e Cenário do Projeto (Laboratório de Resposta a Incidentes)
+
+Aqui você cria um mini-mundo corporativo. Nada de teoria solta. Você monta uma empresa fictícia dentro de máquinas virtuais. Esse ambiente simula o que existe em empresas reais.
+
+### 1 — Infraestrutura Simulada
+
+Rede e segmentação (VLAN): **VLAN 10** (Usuários), **VLAN 20** (Servidores), **VLAN 30** (Administração), **VLAN 40** (DMZ). Esquema: Internet → Firewall → Switch → VLAN10 | VLAN20 | VLAN40. Máquinas: Usuários (Windows 10/11), Servidores (Linux ou Windows Server), DMZ (servidor web, e-mail). VirtualBox ou VMware.
+
+### 2 — Servidores do Ambiente
+
+**FILE-SRV** (arquivos): Windows Server ou Samba; pastas /financeiro, /rh, /projetos, /backups — alvo de ransomware. **DB-SRV** (banco): PostgreSQL ou MySQL; clientes, pedidos, pagamentos — alvo de exfiltração. **MAIL-SRV**: Postfix ou Exchange — phishing. **Active Directory**: autenticação, controle de acesso — coração da rede.
+
+### 3 — Firewall | 4 — IDS/IPS | 5 — Honeypot
+
+Firewall: pfSense, OPNsense. IDS/IPS: Snort, Suricata. Honeypot (opcional): Cowrie, Dionaea.
+
+### 6 — Definição do Incidente | 7 — Injeção | 8 — Papéis | 9 — Ferramentas
+
+Cenários: Ransomware (e-mail + anexo, criptografa FILE-SRV); Exfiltração (cópia do banco); Vulnerabilidade (Apache desatualizado); Conta comprometida (brute force). Documentar injeção com data/hora e host. Papéis SOC: Detecção, Forense, Contenção, Coordenador, Redator. Ferramentas: SIEM (Elastic, Splunk, Wazuh), Wireshark/tcpdump, Autopsy/FTK/Sleuth Kit, Volatility/Rekall, Cuckoo/Any.Run. **Resultado**: laboratório completo de investigação digital.
+
+- Conteúdo detalhado nas seções 6 a 9 acima (cenários, injeção, papéis, ferramentas) (ransomware, exfiltração de dados, invasão por exploração de vulnerabilidade, conta comprometida). Ver seção 7 (injeção) e 8 (papéis). “injeção” do incidente (como foi introduzido, em qual host, em qual momento) para depois reconstruir na investigação.
+---
+
+## Unidade 2 — Detecção do Incidente (Alerta e Triagem)
+
+### 1 — Fontes de detecção
+
+**SIEM**: Centraliza eventos e aplica regras de correlação. Ex.: "Muitos logins falhos no AD + login bem-sucedido em conta privilegiada em 5 min → alerta." Ferramentas: Elastic Stack, Splunk, Wazuh. Configure quais logs enviar (firewall, AD, servidores, endpoints) e crie regras (ex.: MITRE ATT&CK).
+
+**Tráfego**: NetFlow (fluxos, volume, exfiltração); PCAP com Wireshark, tcpdump, Zeek; IDS Snort/Suricata (assinaturas e anomalia). Correlacione no SIEM: mesmo IP em firewall e alerta de malware.
+
+**Autenticação**: AD (eventos 4624, 4625, 4648 — login, falha, mudança de senha); SSH/auth.log (brute force, comandos). Envie ao SIEM (ex.: mesmo usuário em dois países em minutos).
+
+**Endpoint**: EDR, Sysmon, Wazuh agent — processo suspeito, arquivo em pasta sensível, conexão indevida. Regra ex.: processo criptografando muitos arquivos = possível ransomware. **Objetivo**: sem agregar fontes não há triagem de qualidade.
+### 2 — Triagem
+
+**Severidade**: Crítica (ransomware em propagação, exfiltração — ação imediata); Alta (invasão/malware em um host — contenção no mesmo dia); Média (suspeito não confirmado — 24–48 h); Baixa (falso positivo — fechar). **Passos**: 1) Ver qual regra/fonte disparou. 2) Conferir no dado bruto (log, PCAP). 3) Decidir: falso positivo ou real. 4) Se real: abrir “caso”, atribuir responsável e iniciar investigação.
+- **Primeiras perguntas**: Responder por escrito: **O que foi afetado?** (um host, servidor, várias estações?) **Quando começou?** (horário do primeiro evento; se não tiver precisão, aproximar.) **Há propagação?** (tráfego entre hosts, logs de RDP/SMB.) **Quais ativos e dados em risco?** (pessoais/LGPD, financeiros, segredos — define impacto e notificação.) Essas respostas são a base da cronologia e orientam onde fazer imagem forense e análise de tráfego.
+
+### 4 — Documentação desde o início
+
+Registrar: data/hora da detecção, quem detectou, primeiro indicador (qual alerta/log/tráfego), ações imediatas (ex.: host isolado, IP bloqueado). Use planilha, documento ou ferramenta de resposta; alimenta relatório e auditoria. **Resultado Unidade 2**: alerta triado, caso aberto, primeiras respostas documentadas — incidente vira caso de resposta com dono e próxima etapa (investigação).
+
+---
+
+## Unidade 3 — Investigação (Forense e Análise)
+
+### 1 — Ordem de volatilidade
+
+Preservar primeiro o que se perde mais rápido. **Ordem típica**: 1) Memória RAM (processos, conexões, malware em execução — Volatility, Rekall). 2) Conexões de rede ativas e processos. 3) Disco (só depois de imagem bit-a-bit; nunca analisar o original). 4) Logs (servidor, firewall, aplicação). 5) Backups (se existirem e forem confiáveis). **Regra**: nunca alterar evidência original; sempre trabalhar em cópia ou imagem. **O que você aprende**: em laboratório, simule coletar RAM de um host (VM) com Volatility; depois desligue e veja como parte da evidência se perde.
+
+### 2 — Imagem forense do disco
+
+**Por quê**: sem imagem, não há forense defensável; o original fica intocado. **Como**: imagem bit-a-bit (sector a sector) com dd, FTK Imager ou Guymager. Gera arquivo .dd ou .e01. **Integridade**: calcular hash SHA-256 da imagem e do disco original; devem coincidir. **Cadeia de custódia**: documentar quem coletou, quando, onde está armazenado, quem acessou depois — essencial para validade jurídica. Ferramentas: FTK Imager, Autopsy, Sleuth Kit, Guymager. **O que você aprende**: criar imagem de um disco virtual (ex.: VDI do VirtualBox) e verificar hash; abrir a imagem no Autopsy e navegar no sistema de arquivos.
+
+### 3 — Análise de tráfego (PCAP / NetFlow)
+
+**PCAP**: captura completa de pacotes (Wireshark, tcpdump, Zeek). Filtrar por IP do host comprometido; identificar IPs e domínios externos (possível C2 ou exfiltração). **NetFlow**: resumo de fluxos (origem, destino, porta, bytes) — bom para volume e padrões. **O que procurar**: conexões para IPs em listas de ameaça; DNS para domínios suspeitos; tráfego em horário incomum; upload grande (exfiltração). Correlacionar com horários dos logs do host e do SIEM. **O que você aprende**: capturar tráfego de uma VM (Wireshark ou tcpdump), filtrar por IP da VM e listar conexões externas; identificar um fluxo de dados suspeito (ex.: upload para IP desconhecido).
+
+### 4 — Análise de malware (estática e dinâmica)
+
+**Estática (sem executar)**: strings (texto no binário — URLs, IPs), imports (bibliotecas usadas), recursos (PEview, pestudio). **Dinâmica (sandbox)**: executar em VM ou Cuckoo/Any.Run; observar arquivos criados, registro, rede, processos. Relatório da sandbox já traz IOCs (hashes, IPs, URLs). **IOCs a extrair**: hashes MD5/SHA-256, IPs e domínios de C2, URLs, paths, chaves de registro — tabela para SIEM e bloqueio no firewall. **O que você aprende**: rodar um sample em Cuckoo ou VM isolada; anotar hashes e IPs; montar uma linha na tabela de IOCs.
+
+### 5 — Linha do tempo (timeline)
+
+**Objetivo**: reconstruir sequência — quem, quando, o quê, em qual host. **Fontes**: logs do SO (Windows Event, syslog), logs de aplicação, tráfego (primeira e última conexão), artefatos forenses (arquivo criado, registro modificado). **Ferramentas**: log2timeline (Plaso), Timesketch; ou planilha com colunas data/hora, host, evento, fonte. **O que você aprende**: exportar eventos do Windows (ex.: Security) para CSV; ordenar por data/hora; identificar o primeiro evento malicioso (ex.: execução do malware) e a sequência até o dano.
+
+### 6 — Causa raiz
+
+Responder com evidência: **Vetor inicial** (phishing, RDP exposto, vulnerabilidade em servidor web?). **Primeiro host ou conta comprometido** (qual máquina ou usuário — documentar com log ou tráfego). **Movimento lateral** (como foi do primeiro host para outros — RDP, SMB, credenciais roubadas). Isso fecha a parte técnica da investigação e alimenta o relatório. **Resultado Unidade 3**: evidências preservadas, IOCs extraídos, timeline e causa raiz documentadas — pronto para contenção e relatório.
+
+---
+
+## Unidade 4 — Contenção, Erradicação e Recuperação
+
+### 1 — Contenção (parar o mal)
+
+**Objetivo**: impedir propagação e novo acesso do atacante. **Isolar hosts**: desconectar da rede (unplug ou VLAN de quarentena) ou desligar de forma controlada. Máquinas com ransomware ou backdoor não podem continuar na rede. Documentar quais hosts e quando. **Bloquear IOCs**: usar tabela de IOCs (IPs, domínios de C2, URLs); bloquear no firewall e, se possível, no DNS interno (sinkhole). **Desabilitar contas**: conta de usuário ou serviço que o atacante usou — desabilitar; senha será trocada na erradicação. **Comunicação**: coordenador comunica gestão; se dados pessoais, avaliar notificação (LGPD/ANPD). **O que você aprende**: no laboratório, simule isolamento (desligar NIC da VM ou mover para VLAN isolada); adicione um IP malicioso no firewall e teste bloqueio.
+
+### 2 — Erradicação (remover o mal)
+
+**Remover malware**: antivírus/EDR em modo limpeza ou ferramenta do fabricante; se rootkit ou persistência complexa, planejar reinstalação limpa (na recuperação). **Corrigir vulnerabilidades**: aplicar patch (servidor web, SO, aplicação) ou mudar configuração que permitiu o ataque; sem isso o ambiente volta a ser explorável. **Trocar senhas**: todas as contas que possam ter sido comprometidas (usuário que clicou no phishing, conta de serviço no servidor invadido); senha forte e MFA onde possível. **Remover backdoors**: verificar contas novas, tarefas agendadas, serviços instalados, chaves SSH/registro; remover o que não for legítimo. **O que você aprende**: checklist de erradicação — lista de itens (malware, patch, senhas, contas, agendamentos) e marcar cada um como feito.
+
+### 3 — Recuperação (restaurar operação)
+
+**Restaurar de backup**: usar backup anterior ao incidente; validar que o backup não está contaminado. **Teste de restauração**: garantir que o procedimento de restore foi testado; em incidente real não é hora de descobrir que o backup falha. **Reconfigurar**: após restore ou reinstalação — hardening, patches, configurações seguras. **Reestabelecer conectividade**: recolocar hosts na rede em etapas (ex.: primeiro servidores críticos), com monitoramento; observar se indicador de comprometimento reaparece. **Validação final**: varredura de vulnerabilidades ou malware; revisão de logs; só considerar incidente encerrado quando não houver evidência de atividade maliciosa. **O que você aprende**: documentar o plano de recuperação (ordem de restore, quem faz o quê, critérios de validação).
+
+### 4 — Lições aprendidas
+
+**O que documentar**: Detecção — as regras do SIEM pegaram? Tempo até detectar foi aceitável? Resposta — contenção foi rápida? Equipe tinha runbooks? Backup — íntegro e restaurado a tempo? Treinamento — usuários reconhecem phishing? Senhas fortes e MFA? Inserir no relatório e em plano de ação (recomendações e melhorias). **Resultado Unidade 4**: ataque contido, malware e backdoors erradicados, sistemas recuperados e validados — ciclo de resposta fechado na prática; falta documentar e apresentar.
+
+---
+
+## Unidade 5 — Relatório Executivo e Técnico (Documentação e Defesa)
+
+### 1 — Relatório executivo (para a gestão)
+
+**Tamanho**: uma a duas páginas. **Quem lê**: direção, gerência (não necessariamente técnico). **Conteúdo**: Resumo do incidente — o quê aconteceu, quando (período), impacto em negócio e operação (parada de serviço, dados vazados, custo estimado). Causa raiz em linguagem acessível (ex.: "invasão a partir de e-mail malicioso aberto por colaborador" ou "servidor web desatualizado explorado por atacante"). Ações tomadas — contenção, erradicação, recuperação em poucas linhas. Recomendações prioritárias — investimento (ferramentas, treinamento), processo (políticas, runbooks), próximos passos (auditoria, testes de backup). **Linguagem**: objetiva, sem jargão; números e prazos quando fizer sentido. **O que você aprende**: escrever um parágrafo de causa raiz que um gestor não técnico entenda; listar três recomendações em uma frase cada.
+
+### 2 — Relatório técnico (para equipe, auditoria, conformidade)
+
+**Estrutura sugerida**: **Metodologia** — como foi feita a detecção (SIEM, IDS, logs), a investigação (imagem forense, tráfego, malware) e a resposta (contenção, erradicação, recuperação). **Cronologia detalhada** — linha do tempo com data/hora, host, evento e fonte (log, tráfego, artefato). **Evidências** — IOCs (tabela), hashes, IPs, domínios, trechos de log ou tráfego (sem dados sensíveis); análise forense e de malware (comportamento, artefatos). **Causa raiz técnica** — vetor, primeiro host/conta comprometido, movimento lateral, com referência às evidências. **Medidas** — contenção, erradicação, recuperação (o que foi feito, em qual ordem, resultado). **Recomendações técnicas** — hardening, monitoramento (regras SIEM, IDS), backup e teste de restauração, gestão de vulnerabilidades, treinamento. **O que você aprende**: usar a cronologia que você montou na Unidade 3 como seção do relatório; citar um log ou um IOC como evidência de cada conclusão.
+
+### 3 — Tabela de IOCs e anexos
+
+**Tabela de IOCs**: colunas — tipo (hash, IP, domínio, URL, nome de arquivo), valor, contexto (ex.: C2, malware, exfiltração), data de coleta. **Uso**: alimentar SIEM e firewall para bloqueio e detecção futura; anexar ao relatório técnico. **Anexos** (se aplicável): trechos de regras SIEM ou IDS usadas na detecção; capturas de tela da linha do tempo ou do fluxo de tráfego (anonimizadas); resumo do relatório da sandbox (malware). Tudo sem expor dados sensíveis. **O que você aprende**: preencher pelo menos cinco linhas da tabela de IOCs a partir da sua análise (ex.: um hash, dois IPs, um domínio, uma URL).
+
+### 4 — Apresentação e defesa perante banca
+
+**Slides ou documento de apoio**: cenário do laboratório e tipo de incidente; metodologia (detecção, investigação, resposta); principais achados (causa raiz, IOCs, impacto); conclusões e recomendações; lições aprendidas. **Durante a defesa**: explicar escolhas técnicas (por que essa ferramenta, por que essa ordem de volatilidade); justificar conclusões com evidências (qual log, qual tráfego); responder perguntas sobre alternativas (outras ferramentas, outros cenários). **O que você aprende**: isso demonstra que você não só executou mas entende o porquê e sabe comunicar — essencial para analista de SOC, resposta a incidentes e forense.
+
+---
+
+## Mentalidade profissional
+O Projeto Integrador Final replica o que um analista de SOC e um perito forense fazem na vida real: detectar, investigar, conter, erradicar, recuperar e documentar. Relatório bem escrito e defesa clara demonstram que você não só “sabe fazer” mas sabe comunicar e sustentar suas conclusões — essencial para carreiras em segurança, auditoria e resposta a incidentes.
+
+## Prática recomendada
+- **Laboratório isolado**: nunca rede de produção; definir cenário e “injetar” o incidente de forma controlada.
+- **Documentar cada etapa**: detecção, triagem, imagem forense, análise, contenção — data/hora e responsável; no relatório você consolida o que anotou.
+- **Revisar relatório**: foco em clareza — gestor entende o executivo; técnico reproduz a análise a partir do técnico. **Treinar defesa**: antecipar perguntas da banca (por que Volatility antes do disco? por que essa regra?) e preparar respostas com evidência.
+
+## Checklist de aprendizagem
+
+- [ ] **Ambiente e incidente**: Descrever ambiente simulado (VLANs, servidores, ferramentas) e tipo de incidente injetado, com data/hora de injeção.
+- [ ] **Detecção e triagem**: Explicar como foi detectado (SIEM, tráfego, logs), triagem (severidade, abertura de caso), primeiras perguntas respondidas.
+- [ ] **Investigação**: Listar etapas (ordem de volatilidade, imagem forense, tráfego, malware, timeline, causa raiz) e citar pelo menos uma ferramenta por etapa.
+- [ ] **Resposta**: Diferenciar contenção, erradicação e recuperação; dar exemplo aplicado ao cenário (ex.: contenção = isolamos host X e bloqueamos IP Y).
+- [ ] **Relatório**: Redigir executivo (1–2 páginas) e técnico (metodologia, cronologia, evidências, IOCs, recomendações); tabela de IOCs com pelo menos 5 entradas.
+- [ ] **Defesa**: Apresentar perante banca (slides ou documento), explicar escolhas técnicas e justificar conclusões com evidências.
+
+## Formação final
+Ao concluir o curso e este projeto: analista de segurança, operador de SOC, resposta a incidentes, auditor de segurança, forense computacional, pentester. O Projeto Integrador Final consolida que você sabe integrar detecção, investigação, resposta e documentação em um cenário realista.`,
 };

@@ -18,15 +18,18 @@ function BlocoCodigo({ label, codigo }) {
       {label && <span className="atalhos__bloco-label">{label}</span>}
       <div className="atalhos__bloco-code-wrap">
         <pre className="atalhos__bloco-code"><code>{codigo}</code></pre>
-        <button
-          type="button"
-          className="atalhos__bloco-copy"
-          onClick={copiar}
-          title="Copiar"
-          aria-label="Copiar comando"
-        >
-          {copiado ? '✓ Copiado' : 'Copiar'}
-        </button>
+        <div className="atalhos__bloco-copy-wrap">
+          <button
+            type="button"
+            className="atalhos__bloco-copy"
+            onClick={copiar}
+            title="Copiar"
+            aria-label="Copiar comando"
+          >
+            {copiado ? '✓ Copiado' : 'Copiar'}
+          </button>
+          {copiado && <span className="atalhos__toast" role="status">Copiado!</span>}
+        </div>
       </div>
     </div>
   );

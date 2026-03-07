@@ -1,21 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-/* Tema escuro (padrão) – página mais escura, letras brancas */
+/* ========== PERSONALIZAÇÃO – altere aqui ========== */
+/* Cores, bordas e transições globais – edite os valores abaixo para mudar o visual do projeto */
 :root,
 [data-theme="dark"] {
+  /* Cores de fundo */
   --bg: #05080c;
   --bg-card: #0a0e14;
   --bg-tag: #0f1419;
   --bg-code: #030507;
   --border-card: #1a2332;
+  /* Texto */
   --text-primary: #f0f4f8;
   --text-muted: #94a3b8;
+  /* Cor de destaque (botões, links, bordas ativas) – mude para personalizar */
   --accent: #10b981;
   --accent-warn: #f59e0b;
   --accent-alpha: rgba(16, 185, 129, 0.18);
   --shadow: rgba(0, 0, 0, 0.6);
+  /* Fontes – troque por outra do Google Fonts se quiser */
   --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', 'Consolas', monospace;
+  /* Efeitos dinâmicos – ajuste a duração das transições e animações */
+  --transition-fast: 0.15s;
+  --transition-normal: 0.25s;
+  --transition-slow: 0.35s;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
   font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
@@ -27,8 +39,35 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Animações globais – entrada suave e efeitos dinâmicos */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-alpha); }
+  50% { box-shadow: 0 0 20px 2px var(--accent-alpha); }
+}
+
+/* Aplicar entrada suave na página principal */
+.app__main,
+.atalhos-teclado__main,
+.simulado__pergunta-wrap {
+  animation: fadeIn var(--transition-slow) ease-out;
+}
+
 * {
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -37,7 +76,8 @@ body {
   min-height: 100vh;
   background-image:
     linear-gradient(180deg, transparent 0%, var(--bg) 100%),
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.06), transparent);
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.08), transparent);
+  transition: background-color var(--transition-slow);
 }
 
 #root {
@@ -75,4 +115,44 @@ input:focus-visible,
   background-image:
     linear-gradient(180deg, transparent 0%, var(--bg) 100%),
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(5, 150, 105, 0.06), transparent);
+}
+
+/* ========== Versão para impressão ========== */
+@media print {
+  .app__global-nav,
+  .app__theme-toggle,
+  .app__logout,
+  .app__filtros,
+  .atalhos__nav,
+  .atalhos__busca-wrap,
+  .atalhos-teclado__nav,
+  .atalhos-teclado__categorias,
+  .atalhos-teclado__busca,
+  .simulado__modos,
+  .simulado__filtro-wrap,
+  .study-detail-overlay .study-detail__fechar,
+  button.atalhos__bloco-copy,
+  .atalhos__toast {
+    display: none !important;
+  }
+
+  body,
+  .app,
+  .atalhos,
+  .study-detail__card {
+    background: #fff !important;
+    color: #111 !important;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+
+  .app__header,
+  .atalhos__header,
+  main {
+    max-width: 100%;
+  }
+
+  a[href]::after {
+    content: none;
+  }
 }

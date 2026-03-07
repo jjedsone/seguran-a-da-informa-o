@@ -27,17 +27,19 @@
   font-size: 0.9rem;
   font-weight: 600;
   border: 1px solid var(--border-card);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--bg-tag);
   color: var(--text-primary);
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  transition: border-color var(--transition-normal), color var(--transition-normal),
+    background var(--transition-normal), transform var(--transition-fast);
 }
 
 .app__global-nav-link:hover {
   border-color: var(--accent);
   color: var(--accent);
   background: var(--accent-alpha);
+  transform: translateY(-1px);
 }
 
 .app__global-nav-link--ativo {
@@ -46,46 +48,66 @@
   background: var(--accent-alpha);
 }
 
-.app__theme-toggle {
+.app__theme-toggle,
+.app__logout {
   padding: 0.45rem 0.9rem;
   font-size: 0.85rem;
   font-weight: 600;
   border: 1px solid var(--border-card);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--bg-tag);
   color: var(--text-primary);
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: border-color var(--transition-normal), background var(--transition-normal),
+    color var(--transition-normal), transform var(--transition-fast);
+}
+
+.app__theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.app__theme-icon {
+  font-size: 1.1rem;
+}
+
+.app__theme-label {
+  font-size: 0.8rem;
 }
 
 .app__theme-toggle:hover {
   border-color: var(--accent);
   background: var(--accent-alpha);
   color: var(--accent);
+  transform: scale(1.02);
 }
 
 .app__logout {
-  padding: 0.45rem 0.9rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border: 1px solid var(--border-card);
-  border-radius: 8px;
-  background: var(--bg-tag);
   color: var(--text-muted);
-  cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
 }
 
 .app__logout:hover {
   border-color: #ef4444;
   background: rgba(239, 68, 68, 0.15);
   color: #ef4444;
+  transform: scale(1.02);
 }
 
 .app__header {
   max-width: 920px;
   margin: 0 auto 2rem;
   text-align: center;
+}
+
+.app__header-img {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  margin-bottom: 1rem;
+  box-shadow: 0 8px 24px var(--shadow);
 }
 
 .app__titulo {
@@ -128,6 +150,32 @@
   opacity: 0.95;
 }
 
+.app__progresso-wrap {
+  max-width: 400px;
+  margin: 0 auto 1rem;
+}
+
+.app__progresso-texto {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.app__progresso-bar {
+  height: 8px;
+  background: var(--bg-tag);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.app__progresso-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width var(--transition-normal);
+}
+
 .app__header .search-bar {
   margin: 0 auto 1.25rem;
 }
@@ -142,18 +190,20 @@
 .app__filtro {
   padding: 0.5rem 0.85rem;
   font-size: 0.8rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border-card);
   background: var(--bg-card);
   color: var(--text-muted);
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  transition: border-color var(--transition-normal), color var(--transition-normal),
+    background var(--transition-normal), transform var(--transition-fast);
 }
 
 .app__filtro:hover {
   color: var(--text-primary);
   border-color: var(--text-muted);
   background: var(--bg-tag);
+  transform: translateY(-1px);
 }
 
 .app__filtro--ativo {
@@ -161,6 +211,12 @@
   color: var(--accent);
   font-weight: 600;
   background: var(--accent-alpha);
+}
+
+.app__filtro--favoritos.app__filtro--ativo {
+  border-color: var(--accent-warn);
+  color: var(--accent-warn);
+  background: rgba(245, 158, 11, 0.15);
 }
 
 .app__main {
@@ -174,7 +230,27 @@
   gap: 1.25rem;
 }
 
+/* Entrada em sequência dos cards (efeito cascata) */
+.app__grid .study-card {
+  animation: fadeIn var(--transition-slow) ease-out backwards;
+}
+
+.app__grid .study-card:nth-child(1) { animation-delay: 0.05s; }
+.app__grid .study-card:nth-child(2) { animation-delay: 0.1s; }
+.app__grid .study-card:nth-child(3) { animation-delay: 0.15s; }
+.app__grid .study-card:nth-child(4) { animation-delay: 0.2s; }
+.app__grid .study-card:nth-child(5) { animation-delay: 0.25s; }
+.app__grid .study-card:nth-child(6) { animation-delay: 0.3s; }
+.app__grid .study-card:nth-child(n+7) { animation-delay: 0.35s; }
+
 .app__vazio {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 3rem 1rem;
+  font-size: 0.95rem;
+}
+
+.app__loading {
   text-align: center;
   color: var(--text-muted);
   padding: 3rem 1rem;

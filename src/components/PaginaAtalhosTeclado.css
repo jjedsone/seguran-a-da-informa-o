@@ -1,0 +1,189 @@
+.atalhos-teclado {
+  min-height: 100vh;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.atalhos-teclado__header {
+  max-width: 920px;
+  margin: 0 auto 1.5rem;
+  text-align: center;
+}
+
+.atalhos-teclado__titulo {
+  font-size: clamp(1.4rem, 3.5vw, 1.85rem);
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+  color: var(--text-primary);
+}
+
+.atalhos-teclado__subtitulo {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+}
+
+.atalhos-teclado__busca {
+  max-width: 380px;
+  margin: 0 auto 1rem;
+  width: 100%;
+}
+
+.atalhos-teclado__busca .search-bar {
+  max-width: none;
+}
+
+.atalhos-teclado__nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.atalhos-teclado__nav-plataforma {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 2px solid var(--border-card);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.atalhos-teclado__nav-plataforma:hover {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+  background: var(--bg-tag);
+}
+
+.atalhos-teclado__nav-plataforma--ativo {
+  background: var(--bg-tag);
+}
+
+.atalhos-teclado__categorias {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.atalhos-teclado__cat-btn {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.atalhos-teclado__cat-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+  background: var(--bg-tag);
+}
+
+.atalhos-teclado__cat-btn--ativo {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--bg-tag);
+}
+
+.atalhos-teclado__main {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.atalhos-teclado__plataforma-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.atalhos-teclado__plataforma-label strong {
+  color: var(--text-primary);
+}
+
+.atalhos-teclado__vazio {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 2rem;
+}
+
+.atalhos-teclado__table-wrap {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-card);
+}
+
+.atalhos-teclado__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.atalhos-teclado__table th,
+.atalhos-teclado__table td {
+  padding: 0.65rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-card);
+}
+
+.atalhos-teclado__table th {
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-tag);
+}
+
+.atalhos-teclado__table th:first-child {
+  border-radius: 9px 0 0 0;
+}
+
+.atalhos-teclado__table th:last-child {
+  border-radius: 0 9px 0 0;
+}
+
+.atalhos-teclado__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.atalhos-teclado__table tbody tr:hover td {
+  background: var(--bg-tag);
+}
+
+.atalhos-teclado__acao {
+  color: var(--text-primary);
+}
+
+.atalhos-teclado__tecla {
+  white-space: nowrap;
+}
+
+.atalhos-teclado__kbd {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85em;
+  border-radius: 6px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  box-shadow: 0 1px 0 var(--border-card);
+}
+
+.atalhos-teclado__nao {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .atalhos-teclado__table th,
+  .atalhos-teclado__table td {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+}

@@ -1,7 +1,7 @@
 import { getCategoria } from '../data/estudos';
 import './StudyCard.css';
 
-export default function StudyCard({ estudo, onClick }) {
+export default function StudyCard({ estudo, onClick, isFavorito, onToggleFavorito }) {
   const periodo = getCategoria(estudo.periodoId);
 
   const handleKeyDown = (e) => {
@@ -25,9 +25,20 @@ export default function StudyCard({ estudo, onClick }) {
         <span className="study-card__badge" style={{ backgroundColor: periodo?.cor }}>
           {periodo?.nome}
         </span>
-        {estudo.horas != null && (
-          <span className="study-card__horas">{estudo.horas}h</span>
-        )}
+        <div className="study-card__header-right">
+          {estudo.horas != null && (
+            <span className="study-card__horas">{estudo.horas}h</span>
+          )}
+          <button
+            type="button"
+            className={`study-card__favorito ${isFavorito ? 'study-card__favorito--ativo' : ''}`}
+            onClick={onToggleFavorito}
+            title={isFavorito ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+            aria-label={isFavorito ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+          >
+            {isFavorito ? '★' : '☆'}
+          </button>
+        </div>
       </div>
       <h2 className="study-card__titulo">{estudo.titulo}</h2>
       <p className="study-card__resumo">{estudo.resumo}</p>

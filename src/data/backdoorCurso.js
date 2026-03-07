@@ -194,20 +194,19 @@ Remoção (após identificar):
     id: 'celular-rede-riscos',
     titulo: 'Celular na rede – Como um atacante (notebook) enxerga o aparelho',
     badge: 'Celular e rede',
-    conteudo: `Quando o celular está no mesmo Wi‑Fi que um notebook (atacante), ambos estão na mesma rede local. O atacante pode:
+    conteudo: `Quando o celular está no mesmo Wi‑Fi que um notebook (atacante), ambos estão na mesma rede local. O atacante enxerga o celular como mais um host. Conteúdo educacional; uso apenas em lab ou autorizado.
 
-1. Ver o celular na rede:
-   No notebook (Kali/Linux): nmap -sn 192.168.1.0/24 ou arp-scan -l.
-   O celular aparece com um IP (ex.: 192.168.1.15). Ferramentas como Nmap, arp-scan, Fing (app) listam dispositivos.
+1) Ver o celular na rede: No notebook (Kali/Linux): nmap -sn 192.168.1.0/24 ou arp-scan -l. O celular aparece com um IP (ex.: 192.168.1.15). Ferramentas: Nmap, arp-scan, Fing (app). Conclusão: na mesma Wi‑Fi o celular é "visível" por IP.
 
-2. Varredura no IP do celular:
-   nmap -sV -p- 192.168.1.15
-   Celulares em geral têm poucas portas abertas (Android/iOS são fechados por padrão). Podem aparecer portas de serviços (ex.: mídia, AirDrop em rede Apple).
+2) Varredura no IP do celular: nmap -sV -p- 192.168.1.15. Android/iOS são fechados por padrão; poucas ou nenhuma porta aberta. Podem aparecer mídia, AirDrop (Apple). Se não houver serviço escutando, não há porta para explorar diretamente.
 
-3. Ataques comuns na mesma rede (conceito educacional):
-   - Rogue AP (ponto de acesso falso): notebook emite um Wi‑Fi com nome parecido; se o celular conectar, todo o tráfego passa pelo atacante (MITM).
-   - MITM (man-in-the-middle): com ARP spoofing o atacante se coloca entre o celular e o roteador; pode ver tráfego não criptografado ou tentar injetar conteúdo.
-   - Exploração de apps: se algum app no celular tiver serviço vulnerável na rede (raro), poderia ser explorado.
+3) Rogue AP (ponto de acesso falso): atacante emite Wi‑Fi com nome parecido. Se a vítima conectar, todo o tráfego passa pelo atacante. Como "bula" o sistema: tráfego HTTP pode ser lido; atacante pode injetar phishing/malware ou redirecionar DNS. Resultado: interceptação de senhas, injeção de conteúdo.
+
+4) MITM com ARP spoofing: atacante se coloca entre celular e roteador (ettercap, bettercap, arpspoof). Como "bula": tráfego da vítima passa pelo atacante; HTTP pode ser lido/alterado; SSL stripping tenta capturar credenciais. Resultado: roubo de sessões, senhas, cookies.
+
+5) Exploração de apps: se algum app abrir porta na rede (raro), atacante pode tentar explorar. Maioria dos apps não expõe porta.
+
+6) Resumo como o sistema é comprometido: rede direta raro (poucas portas). Rogue AP: vítima no Wi‑Fi falso → todo tráfego pelo atacante. ARP spoofing: tráfego desviado → leitura/injeção ou SSL stripping. Malware no celular (app falso): backdoor que se conecta ao C2 do atacante.
 
 Uso apenas em lab/autorizado. Acessar dispositivo alheio sem autorização é crime (Art. 154-A CP).`,
   },
@@ -229,7 +228,7 @@ Uso apenas em lab/autorizado. Acessar dispositivo alheio sem autorização é cr
 
 6. Em rede que não confia: desligar Wi‑Fi e usar só dados móveis para acessar banco, e-mail, etc.
 
-Quem entende como o celular aparece na rede e quais são os riscos (rogue AP, MITM) consegue se proteger melhor.`,
+Quem entende como o celular aparece na rede (IP visível, nmap/arp-scan) e os riscos (Rogue AP, MITM/ARP spoofing) consegue se proteger melhor. Em rede que não confia, use dados móveis; em empresa, rede de visitantes separada e MDM.`,
   },
   {
     id: 'celular-notebook-lab',
@@ -246,6 +245,6 @@ No celular (vítima em um ataque real):
 - Se conectar em Wi‑Fi falso ou sofrer MITM, tráfego HTTP (não HTTPS) pode ser visto. Apps e sites que usam HTTPS protegem o conteúdo.
 - Malware no celular (instalado por enganação) pode abrir backdoor; aí o “acesso” não é só “pela rede”, e sim pelo malware que se conecta a um servidor do atacante.
 
-Resumo: “entrar no celular pela rede” do notebook geralmente não é um comando mágico; envolve engenharia (rogue AP, MITM) ou exploração de serviço raro. O foco em defesa é: rede segura, não conectar em Wi‑Fi suspeito, usar HTTPS/VPN e manter o aparelho atualizado.`,
+Resumo: “entrar no celular pela rede” do notebook geralmente não é um comando mágico; envolve engenharia (rogue AP, MITM) ou exploração de serviço raro. Defesa: rede segura, não conectar em Wi‑Fi suspeito, HTTPS/VPN e aparelho atualizado. O atacante consegue: ver IP do celular; com MITM/Rogue AP, ler ou alterar HTTP; exploração direta só se houver serviço vulnerável (raro).`,
   },
 ];
