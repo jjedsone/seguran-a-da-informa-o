@@ -1,28 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { getCategoria } from '../data/estudos';
+import { formatarConteudo } from '../lib/formatarConteudo';
 import './StudyDetail.css';
-
-// Converte conteúdo estilo markdown simples em HTML seguro para exibição
-function formatarConteudo(texto) {
-  if (!texto) return '';
-  let html = texto
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-  // Blocos de código primeiro (antes de trocar \n)
-  html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-  // Títulos
-  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-  // Negrito
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  // Separador horizontal (---)
-  html = html.replace(/^---$/gm, '<hr/>');
-  // Quebras de linha
-  html = html.replace(/\n/g, '<br/>');
-  return html;
-}
 
 export default function StudyDetail({ estudo, onFechar }) {
   const refDialog = useRef(null);
@@ -46,6 +25,9 @@ export default function StudyDetail({ estudo, onFechar }) {
 
   if (!estudo) return null;
   const periodo = getCategoria(estudo.periodoId);
+  const conteudoExibir = estudo.conteudo && String(estudo.conteudo).trim()
+    ? estudo.conteudo
+    : (estudo.resumo ? `# ${estudo.titulo}\n\n${estudo.resumo}` : `# ${estudo.titulo}\n\nConteúdo em elaboração. Consulte a ementa e os objetivos na grade do curso.`);
 
   return (
     <div
@@ -87,7 +69,7 @@ export default function StudyDetail({ estudo, onFechar }) {
         </header>
         <div
           className="study-detail__conteudo"
-          dangerouslySetInnerHTML={{ __html: formatarConteudo(estudo.conteudo) }}
+          dangerouslySetInnerHTML={{ __html: formatarConteudo(conteudoExibir) }}
         />
       </div>
     </div>

@@ -1,0 +1,229 @@
+/* Página: Guia de Segurança da Informação (conteúdo unificado, sem banco) */
+.guia-seguranca {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.guia-seguranca__hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+}
+
+.guia-seguranca__badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent, #10b981);
+  margin-bottom: 0.5rem;
+}
+
+.guia-seguranca__titulo {
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  color: var(--text-primary, #f1f5f9);
+}
+
+.guia-seguranca__subtitulo {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text-muted, #94a3b8);
+  max-width: 640px;
+  margin: 0 auto 1.25rem;
+}
+
+.guia-seguranca__intro {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-muted, #94a3b8);
+}
+
+.guia-seguranca__intro h1,
+.guia-seguranca__intro h2 {
+  font-size: 1rem;
+  margin: 0.5rem 0 0.25rem;
+  color: var(--text-primary, #e2e8f0);
+}
+
+.guia-seguranca__intro strong {
+  color: var(--text-primary, #e2e8f0);
+}
+
+/* Índice */
+.guia-seguranca__indice {
+  margin-bottom: 2.5rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-card, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-md, 8px);
+}
+
+.guia-seguranca__indice-titulo {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+  color: var(--text-primary, #f1f5f9);
+}
+
+.guia-seguranca__indice-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.guia-seguranca__indice-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  color: var(--text-muted, #94a3b8);
+  text-decoration: none;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm, 6px);
+  transition: color 0.2s, background 0.2s;
+}
+
+.guia-seguranca__indice-link:hover {
+  color: var(--mod-cor, var(--accent, #10b981));
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.guia-seguranca__indice-icone {
+  opacity: 0.9;
+}
+
+/* Conteúdo por módulo */
+.guia-seguranca__conteudo {
+  margin-bottom: 2rem;
+}
+
+.guia-seguranca__modulo {
+  margin-bottom: 2.5rem;
+  padding-left: 1rem;
+  border-left: 4px solid var(--accent, #10b981);
+  scroll-margin-top: 1rem;
+}
+
+.guia-seguranca__modulo-titulo {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0 0 1.25rem;
+  color: var(--text-primary, #f1f5f9);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.guia-seguranca__modulo-icone {
+  opacity: 0.9;
+}
+
+.guia-seguranca__capitulo {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.06));
+  scroll-margin-top: 1rem;
+}
+
+.guia-seguranca__capitulo:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.guia-seguranca__capitulo-titulo {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+  color: var(--text-primary, #e2e8f0);
+}
+
+.guia-seguranca__capitulo-body {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-primary, #e2e8f0);
+}
+
+.guia-seguranca__capitulo-body h1 {
+  font-size: 1.35rem;
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+}
+
+.guia-seguranca__capitulo-body h2 {
+  font-size: 1.2rem;
+  margin: 1.25rem 0 0.5rem;
+}
+
+.guia-seguranca__capitulo-body h3 {
+  font-size: 1.05rem;
+  margin: 1rem 0 0.4rem;
+}
+
+.guia-seguranca__capitulo-body p,
+.guia-seguranca__capitulo-body li {
+  margin: 0 0 0.5rem;
+}
+
+.guia-seguranca__capitulo-body ul {
+  margin: 0 0 1rem;
+  padding-left: 1.5rem;
+}
+
+.guia-seguranca__capitulo-body pre {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  border-radius: var(--radius-sm, 6px);
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.guia-seguranca__capitulo-body code {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.9em;
+}
+
+.guia-seguranca__capitulo-body hr {
+  border: none;
+  border-top: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+  margin: 1.5rem 0;
+}
+
+.guia-seguranca__capitulo-body strong {
+  color: var(--text-primary, #f1f5f9);
+}
+
+/* Footer */
+.guia-seguranca__footer {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+}
+
+.guia-seguranca__footer-link {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: var(--accent, #10b981);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.guia-seguranca__footer-link:hover {
+  text-decoration: underline;
+}
+
+.guia-seguranca__footer-note {
+  font-size: 0.8rem;
+  color: var(--text-muted, #64748b);
+  margin: 0;
+}

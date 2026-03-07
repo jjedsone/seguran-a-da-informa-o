@@ -611,10 +611,13 @@ Ao concluir: analista de segurança, SOC, resposta a incidentes, auditor, forens
   },
 ];
 
-// Mescla conteúdo completo (nível faculdade de elite) quando disponível
-const estudos = estudosBase.map((e) => ({
-  ...e,
-  conteudo: conteudoCompleto[e.id] ?? e.conteudo,
-}));
+// Mescla conteúdo completo (nível faculdade de elite) quando disponível; nunca deixa vazio
+const estudos = estudosBase.map((e) => {
+  const conteudoBruto = conteudoCompleto[e.id] ?? e.conteudo;
+  const conteudoFinal = (conteudoBruto && String(conteudoBruto).trim())
+    ? conteudoBruto
+    : (e.resumo ? `# ${e.titulo}\n\n## Resumo\n${e.resumo}` : `# ${e.titulo}\n\nConteúdo em elaboração. Ementa e objetivos na grade do curso.`);
+  return { ...e, conteudo: conteudoFinal };
+});
 
 export { estudos };

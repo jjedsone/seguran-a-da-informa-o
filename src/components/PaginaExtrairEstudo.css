@@ -1,0 +1,250 @@
+.extrair-estudo {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.extrair-estudo__hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border, rgba(255,255,255,0.08));
+}
+
+.extrair-estudo__badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent, #10b981);
+  margin-bottom: 0.75rem;
+}
+
+.extrair-estudo__titulo {
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.75rem;
+  color: var(--text-primary, #f1f5f9);
+}
+
+.extrair-estudo__subtitulo {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-muted, #94a3b8);
+  margin: 0 0 0.5rem;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.extrair-estudo__meta {
+  font-size: 0.875rem;
+  color: var(--text-muted, #64748b);
+  margin: 0;
+}
+
+.extrair-estudo__tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.extrair-estudo__tab {
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--border, rgba(255,255,255,0.1));
+  background: var(--bg-card, rgba(255,255,255,0.03));
+  color: var(--text-muted, #94a3b8);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.extrair-estudo__tab:hover {
+  color: var(--text-primary, #f1f5f9);
+  border-color: var(--accent, #10b981);
+}
+
+.extrair-estudo__tab--ativo {
+  background: var(--accent, #10b981);
+  color: #0f172a;
+  border-color: var(--accent, #10b981);
+}
+
+.extrair-estudo__secao-titulo {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary, #f1f5f9);
+}
+
+.extrair-estudo__secao-desc {
+  color: var(--text-muted, #94a3b8);
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+}
+
+.extrair-estudo__grid-resumos {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .extrair-estudo__grid-resumos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.extrair-estudo__card-resumo {
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg, 12px);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  background: var(--bg-card, rgba(255,255,255,0.03));
+  border-left: 4px solid var(--card-accent, var(--accent));
+}
+
+.extrair-estudo__card-resumo-titulo {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary, #f1f5f9);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.extrair-estudo__card-resumo-icone {
+  opacity: 0.8;
+}
+
+.extrair-estudo__card-resumo-texto {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-muted, #94a3b8);
+}
+
+.extrair-estudo__flash-filtro {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.extrair-estudo__flash-filtro label {
+  font-size: 0.9rem;
+  color: var(--text-muted, #94a3b8);
+}
+
+.extrair-estudo__select {
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--border, rgba(255,255,255,0.15));
+  background: var(--bg, #0f172a);
+  color: var(--text-primary, #f1f5f9);
+  font-size: 0.9rem;
+}
+
+.extrair-estudo__flash-wrap {
+  perspective: 1200px;
+}
+
+.extrair-estudo__flash-card {
+  width: 100%;
+  min-height: 220px;
+  border: none;
+  border-radius: var(--radius-lg, 12px);
+  cursor: pointer;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+}
+
+.extrair-estudo__flash-card--virado {
+  transform: rotateY(180deg);
+}
+
+.extrair-estudo__flash-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius-lg, 12px);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid var(--border, rgba(255,255,255,0.1));
+}
+
+.extrair-estudo__flash-face--frente {
+  background: var(--bg-card, rgba(255,255,255,0.05));
+}
+
+.extrair-estudo__flash-face--verso {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), var(--bg-card, rgba(255,255,255,0.05)));
+  transform: rotateY(180deg);
+}
+
+.extrair-estudo__flash-num {
+  font-size: 0.75rem;
+  color: var(--text-muted, #64748b);
+  margin-bottom: 0.75rem;
+}
+
+.extrair-estudo__flash-pergunta {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--text-primary, #f1f5f9);
+  margin: 0;
+}
+
+.extrair-estudo__flash-dica {
+  font-size: 0.8rem;
+  color: var(--accent, #10b981);
+  margin-top: 1rem;
+}
+
+.extrair-estudo__flash-resposta {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: var(--text-primary, #f1f5f9);
+}
+
+.extrair-estudo__flash-explicacao {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-muted, #94a3b8);
+}
+
+.extrair-estudo__flash-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.25rem;
+  gap: 1rem;
+}
+
+.extrair-estudo__flash-btn {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--border, rgba(255,255,255,0.15));
+  background: var(--bg-card, rgba(255,255,255,0.05));
+  color: var(--text-primary, #f1f5f9);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.extrair-estudo__flash-btn:hover {
+  border-color: var(--accent, #10b981);
+  background: rgba(16, 185, 129, 0.08);
+}

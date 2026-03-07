@@ -4,6 +4,7 @@ import { getFavoritos, getVistos, toggleFavorito, marcarComoVisto } from './lib/
 import SearchBar from './components/SearchBar';
 import StudyCard from './components/StudyCard';
 import StudyDetail from './components/StudyDetail';
+import GlobalSearch from './components/GlobalSearch';
 import Login from './components/Login';
 
 const PaginaAtalhos = lazy(() => import('./components/PaginaAtalhos'));
@@ -14,6 +15,11 @@ const PaginaCertificacoes = lazy(() => import('./components/PaginaCertificacoes'
 const PaginaAulasPraticas = lazy(() => import('./components/PaginaAulasPraticas'));
 const PaginaSimulado = lazy(() => import('./components/PaginaSimulado'));
 const PaginaSimulador = lazy(() => import('./components/PaginaSimulador'));
+const PaginaExtrairEstudo = lazy(() => import('./components/PaginaExtrairEstudo'));
+const PaginaApostila = lazy(() => import('./components/PaginaApostila'));
+const PaginaGuiaSeguranca = lazy(() => import('./components/PaginaGuiaSeguranca'));
+const PaginaFerramentasProjetos = lazy(() => import('./components/PaginaFerramentasProjetos'));
+const PaginaJogosSeguranca = lazy(() => import('./components/PaginaJogosSeguranca'));
 import { initFirebaseUserAndPrefs, subscribePreferencias, savePreferencias } from './lib/firestorePrefs';
 import { IMAGEM_HEADER } from './data/imagens';
 import './App.css';
@@ -32,6 +38,7 @@ export default function App() {
   const [favoritos, setFavoritos] = useState(() => getFavoritos());
   const [soFavoritos, setSoFavoritos] = useState(false);
   const [vistos, setVistos] = useState(() => getVistos());
+  const [apostilaCapituloInicial, setApostilaCapituloInicial] = useState(null);
   const temaFromFirestoreRef = useRef(false);
 
   useEffect(() => {
@@ -83,6 +90,11 @@ export default function App() {
       'aulas-praticas': 'Aulas Práticas',
       simulado: 'Simulado',
       simulador: 'Simulador',
+      'extrair-estudo': 'Extrair o estudo',
+      apostila: 'Apostila',
+      guia: 'Guia de Segurança',
+      projetos: 'Projetos & Ferramentas',
+      jogos: 'Jogos de Segurança',
     };
     const nome = titulos[pagina] || pagina;
     document.title = `${nome} – Segurança Cibernética`;
@@ -125,6 +137,11 @@ export default function App() {
     <div className="app">
       <nav className="app__global-nav" aria-label="Navegação principal">
         <div className="app__global-nav-links">
+          <GlobalSearch
+            onSelectCurso={(estudo) => { setPagina('curso'); setEstudoAberto(estudo); }}
+            onSelectAtalhos={() => setPagina('atalhos')}
+            onSelectApostila={(capId) => { setPagina('apostila'); setApostilaCapituloInicial(capId); }}
+          />
           {navLink('curso', 'Curso')}
           {navLink('atalhos', 'Atalhos')}
           {navLink('atalhos-teclado', 'Atalhos de teclado')}
@@ -134,6 +151,10 @@ export default function App() {
           {navLink('aulas-praticas', 'Aulas Práticas')}
           {navLink('simulado', 'Simulado')}
           {navLink('simulador', 'Simulador')}
+          {navLink('extrair-estudo', 'Extrair o estudo')}
+          {navLink('apostila', 'Apostila')}
+          {navLink('guia', 'Guia de Segurança')}
+          {navLink('projetos', 'Projetos & Ferramentas')}
         </div>
         <button
           type="button"
@@ -165,6 +186,16 @@ export default function App() {
         {pagina === 'aulas-praticas' && <PaginaAulasPraticas />}
         {pagina === 'simulado' && <PaginaSimulado firebaseUserId={firebaseUserId} />}
         {pagina === 'simulador' && <PaginaSimulador />}
+        {pagina === 'extrair-estudo' && <PaginaExtrairEstudo />}
+        {pagina === 'apostila' && (
+          <PaginaApostila
+            initialCapituloId={apostilaCapituloInicial}
+            onInitialAberto={() => setApostilaCapituloInicial(null)}
+          />
+        )}
+        {pagina === 'guia' && <PaginaGuiaSeguranca />}
+        {pagina === 'projetos' && <PaginaFerramentasProjetos />}
+        {pagina === 'jogos' && <PaginaJogosSeguranca />}
       </Suspense>
 
       {pagina === 'curso' && (

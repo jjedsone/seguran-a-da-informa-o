@@ -1,0 +1,19 @@
+{
+  "name": "Curso de Segurança Cibernética",
+  "short_name": "Segurança Cibernética",
+  "description": "Curso completo de Segurança da Informação – 5 períodos, apostila, simulados e atalhos",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#10b981",
+  "orientation": "any",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
