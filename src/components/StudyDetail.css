@@ -1,7 +1,9 @@
 .study-detail-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,6 +24,8 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  box-shadow: var(--depth-3);
+  animation: depthIn 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .study-detail__header {

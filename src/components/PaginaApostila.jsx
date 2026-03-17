@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect -- sincroniza capituloAberto com initialCapituloId da rota */
 import { useState, useEffect } from 'react';
 import {
   modulosApostila,
@@ -15,6 +16,7 @@ export default function PaginaApostila({ initialCapituloId, onInitialAberto }) {
 
   useEffect(() => {
     if (initialCapituloId && getCapituloById(initialCapituloId)) {
+      // Sincroniza estado com rota (location.state) – exceção intencional
       setCapituloAberto(initialCapituloId);
       onInitialAberto?.();
     }

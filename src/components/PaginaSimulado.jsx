@@ -1,7 +1,8 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { questoesSimulado, certificacoesSimulado } from '../data/questoesSimulado';
 import { questoesSimuladoCurso, periodosSimuladoCurso } from '../data/questoesSimuladoCurso';
 import { saveSimuladoProgress } from '../lib/firestorePrefs';
+import { useTheme } from '../contexts/ThemeContext';
 import './PaginaSimulado.css';
 
 function shuffleArray(arr) {
@@ -15,7 +16,8 @@ function shuffleArray(arr) {
 
 const MODOS = { certificacoes: 'certificacoes', curso: 'curso' };
 
-export default function PaginaSimulado({ firebaseUserId }) {
+export default function PaginaSimulado() {
+  const { firebaseUserId } = useTheme();
   const [modo, setModo] = useState(MODOS.curso);
   const [filtroCert, setFiltroCert] = useState('');
   const [filtroPeriodo, setFiltroPeriodo] = useState('');
@@ -25,15 +27,22 @@ export default function PaginaSimulado({ firebaseUserId }) {
   const [respostaSelecionada, setRespostaSelecionada] = useState(null);
   const [mostrarResultado, setMostrarResultado] = useState(false);
   const [historico, setHistorico] = useState({ acertos: 0, total: 0 });
+  const [historicoQuestoes, setHistoricoQuestoes] = useState([]);
   const [iniciado, setIniciado] = useState(false);
+  const [mostrarResumo, setMostrarResumo] = useState(false);
+  const [modoSóErradas, setModoSóErradas] = useState(false);
+  const [timerAtivo, setTimerAtivo] = useState(false);
+  const [tempoRestante, setTempoRestante] = useState(null);
+  const [timerMinutos, setTimerMinutos] = useState(10);
+  const timerRef = useRef(null);
 
   useEffect(() => {
     if (firebaseUserId && historico.total > 0) {
       saveSimuladoProgress(firebaseUserId, historico).catch(() => {});
     }
-  }, [firebaseUserId, historico.acertos, historico.total]);
+  }, [firebaseUserId, historico]);
 
-  const listaFiltrada = useMemo(() => {
+  const listaBase = useMemo(() => {
     if (modo === MODOS.curso) {
       const lista = questoesCurso;
       if (!filtroPeriodo) return lista;
@@ -44,14 +53,33 @@ export default function PaginaSimulado({ firebaseUserId }) {
     return lista.filter((q) => q.certificacao === filtroCert);
   }, [modo, filtroCert, filtroPeriodo, questoesCert, questoesCurso]);
 
+  const idsErradas = useMemo(() => {
+    const set = new Set(historicoQuestoes.filter((h) => !h.acertou).map((h) => h.id));
+    return set;
+  }, [historicoQuestoes]);
+
+  const listaFiltrada = useMemo(() => {
+    if (!modoSóErradas || idsErradas.size === 0) return listaBase;
+    return listaBase.filter((q) => (q.id || q.pergunta) && idsErradas.has(q.id || q.pergunta));
+  }, [listaBase, modoSóErradas, idsErradas]);
+
+  // Ajusta índice quando a lista encolhe (ex.: modo "só erradas")
+  useEffect(() => {
+    if (indiceAtual >= listaFiltrada.length && listaFiltrada.length > 0) {
+      const next = Math.max(0, listaFiltrada.length - 1);
+      queueMicrotask(() => setIndiceAtual(next));
+    }
+  }, [listaFiltrada.length, indiceAtual]);
+
   const questaoAtual = listaFiltrada[indiceAtual] || null;
   const totalQuestoes = listaFiltrada.length;
   const numeroNaLista = indiceAtual + 1;
 
   const responder = useCallback(() => {
-    if (respostaSelecionada === null || mostrarResultado) return;
+    if (respostaSelecionada === null || mostrarResultado || !questaoAtual) return;
     const acertou = respostaSelecionada === questaoAtual.respostaCorreta;
     setHistorico((h) => ({ acertos: h.acertos + (acertou ? 1 : 0), total: h.total + 1 }));
+    setHistoricoQuestoes((prev) => [...prev, { id: questaoAtual.id || questaoAtual.pergunta, acertou, questao: questaoAtual }]);
     setMostrarResultado(true);
   }, [respostaSelecionada, mostrarResultado, questaoAtual]);
 
@@ -72,8 +100,31 @@ export default function PaginaSimulado({ firebaseUserId }) {
     setRespostaSelecionada(null);
     setMostrarResultado(false);
     setHistorico({ acertos: 0, total: 0 });
+    setHistoricoQuestoes([]);
     setIniciado(false);
+    setMostrarResumo(false);
+    setModoSóErradas(false);
+    setTimerAtivo(false);
+    setTempoRestante(null);
+    if (timerRef.current) clearInterval(timerRef.current);
   }, []);
+
+  useEffect(() => {
+    if (!timerAtivo || tempoRestante == null || tempoRestante <= 0) return;
+    timerRef.current = setInterval(() => {
+      setTempoRestante((t) => {
+        if (t == null || t <= 1) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          setMostrarResumo(true);
+          setTimerAtivo(false);
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- intencional: só inicia quando timerAtivo fica true
+  }, [timerAtivo]);
 
   const iniciarSimulado = () => {
     setIniciado(true);
@@ -81,6 +132,17 @@ export default function PaginaSimulado({ firebaseUserId }) {
     setRespostaSelecionada(null);
     setMostrarResultado(false);
     setHistorico({ acertos: 0, total: 0 });
+    setHistoricoQuestoes([]);
+    setMostrarResumo(false);
+    setModoSóErradas(false);
+    const mins = Math.max(1, Math.min(120, Number(timerMinutos) || 0));
+    if (mins > 0) {
+      setTempoRestante(mins * 60);
+      setTimerAtivo(true);
+    } else {
+      setTempoRestante(null);
+      setTimerAtivo(false);
+    }
   };
 
   if (!iniciado) {
@@ -153,12 +215,80 @@ export default function PaginaSimulado({ firebaseUserId }) {
             </div>
           )}
 
+          <div className="simulado__timer-opts">
+            <label className="simulado__timer-label">
+              <input
+                type="checkbox"
+                checked={timerMinutos > 0}
+                onChange={(e) => setTimerMinutos(e.target.checked ? 10 : 0)}
+                aria-describedby="simulado-timer-desc"
+              />
+              <span id="simulado-timer-desc">Usar timer (opcional)</span>
+            </label>
+            {timerMinutos > 0 && (
+              <label className="simulado__timer-min">
+                <input
+                  type="number"
+                  min={1}
+                  max={120}
+                  value={timerMinutos}
+                  onChange={(e) => setTimerMinutos(Number(e.target.value) || 10)}
+                  aria-label="Minutos para o timer"
+                />
+                <span>min</span>
+              </label>
+            )}
+          </div>
+
           <p className="simulado__contador">
             {listaFiltrada.length} questão{listaFiltrada.length !== 1 ? 'ões' : ''} neste simulado
           </p>
           <button type="button" className="simulado__btn-iniciar" onClick={iniciarSimulado}>
             Iniciar simulado
           </button>
+        </header>
+      </div>
+    );
+  }
+
+  if (mostrarResumo) {
+    const erradas = historicoQuestoes.filter((h) => !h.acertou);
+    const pct = historico.total > 0 ? Math.round((historico.acertos / historico.total) * 100) : 0;
+    return (
+      <div className="simulado simulado--resumo">
+        <header className="simulado__header">
+          <h1 className="simulado__titulo">Resumo do simulado</h1>
+          <div className="simulado__resumo-stats" role="status" aria-live="polite">
+            <p><strong>Acertos:</strong> {historico.acertos} de {historico.total} ({pct}%)</p>
+            <p><strong>Erros:</strong> {historico.total - historico.acertos}</p>
+          </div>
+          {erradas.length > 0 && (
+            <section className="simulado__resumo-erradas" aria-label="Questões erradas para revisão">
+              <h2>Revisar questões erradas</h2>
+              <ul className="simulado__resumo-lista">
+                {erradas.map((h, idx) => (
+                  <li key={h.id || idx} className="simulado__resumo-item">
+                    <p className="simulado__resumo-pergunta">{h.questao?.pergunta}</p>
+                    <p className="simulado__resumo-explicacao">{h.questao?.explicacao}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          <div className="simulado__resumo-acoes">
+            {erradas.length > 0 && (
+              <button
+                type="button"
+                className="simulado__btn simulado__btn--secondary"
+                onClick={() => { setMostrarResumo(false); setModoSóErradas(true); setIndiceAtual(0); setRespostaSelecionada(null); setMostrarResultado(false); }}
+              >
+                Revisar só erradas
+              </button>
+            )}
+            <button type="button" className="simulado__btn-iniciar" onClick={reiniciar}>
+              Novo simulado
+            </button>
+          </div>
         </header>
       </div>
     );
@@ -189,12 +319,40 @@ export default function PaginaSimulado({ firebaseUserId }) {
         <span className="simulado__score">
           Acertos: {historico.acertos}/{historico.total}
         </span>
+        {tempoRestante != null && tempoRestante > 0 && (
+          <span className="simulado__timer-display" role="timer" aria-live="off">
+            {Math.floor(tempoRestante / 60)}:{(tempoRestante % 60).toString().padStart(2, '0')}
+          </span>
+        )}
+        {historico.total > 0 && (
+          <button
+            type="button"
+            className="simulado__btn simulado__btn-resumo"
+            onClick={() => setMostrarResumo(true)}
+          >
+            Ver resumo
+          </button>
+        )}
         <button type="button" className="simulado__btn-sair" onClick={reiniciar}>
           Sair do simulado
         </button>
       </header>
 
-      <main className="simulado__main">
+      <main
+        className="simulado__main"
+        role="region"
+        aria-label="Questão do simulado"
+        onKeyDown={(e) => {
+          if (mostrarResultado) {
+            if (e.key === 'ArrowLeft') { e.preventDefault(); anterior(); }
+            if (e.key === 'ArrowRight') { e.preventDefault(); proxima(); }
+          }
+          if (e.key === 'Enter' && !mostrarResultado && respostaSelecionada !== null) {
+            e.preventDefault();
+            responder();
+          }
+        }}
+      >
         <div className="simulado__questao-card">
           <div className="simulado__cert-badge">{badgeTexto}</div>
           <h2 className="simulado__pergunta">{questaoAtual.pergunta}</h2>

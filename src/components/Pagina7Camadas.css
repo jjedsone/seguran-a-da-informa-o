@@ -1,0 +1,222 @@
+.camadas7 {
+  min-height: 100vh;
+  padding: 1.5rem 1rem 3rem;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.camadas7__hero {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-card);
+}
+
+.camadas7__titulo {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.camadas7__subtitulo {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0 0 1.5rem;
+}
+
+.camadas7__intro {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--depth-1);
+}
+
+.camadas7__intro h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  color: var(--text-primary);
+}
+
+.camadas7__intro p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+}
+
+.camadas7__intro p:last-child {
+  margin-bottom: 0;
+}
+
+.camadas7__intro strong {
+  color: var(--accent);
+}
+
+/* Esquema numerado (7 a 1) */
+.camadas7__esquema {
+  margin-bottom: 2rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-tag);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-card);
+}
+
+.camadas7__esquema-titulo {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.camadas7__esquema-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.camadas7__esquema-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+  border-left: 3px solid var(--border-card);
+  padding-left: 0.75rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.camadas7__esquema-num {
+  font-weight: 600;
+  min-width: 4.5rem;
+  color: var(--text-muted);
+}
+
+.camadas7__esquema-nome {
+  font-weight: 500;
+}
+
+/* Cards por camada */
+.camadas7__main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.camadas7__card {
+  --camada-cor: var(--accent);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-left-width: 4px;
+  border-left-color: var(--camada-cor);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--depth-1);
+}
+
+.camadas7__card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-card);
+  background: var(--bg-tag);
+}
+
+.camadas7__card-badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.5rem;
+}
+
+.camadas7__card-titulo {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  color: var(--text-primary);
+}
+
+.camadas7__card-titulo-en {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.camadas7__card-pdu {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.camadas7__card-pdu strong {
+  color: var(--text-primary);
+}
+
+.camadas7__card-body {
+  padding: 1.25rem 1.5rem;
+}
+
+.camadas7__bloco {
+  margin-bottom: 1.25rem;
+}
+
+.camadas7__bloco:last-child {
+  margin-bottom: 0;
+}
+
+.camadas7__bloco h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.camadas7__bloco p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.camadas7__bloco--seguranca {
+  padding: 1rem;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: var(--radius-md);
+}
+
+.camadas7__bloco--seguranca h3 {
+  color: var(--success, #10b981);
+}
+
+/* Footer resumo */
+.camadas7__footer {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--depth-1);
+}
+
+.camadas7__footer h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  color: var(--text-primary);
+}
+
+.camadas7__footer p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.camadas7__footer strong {
+  color: var(--accent);
+}

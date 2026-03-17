@@ -1,14 +1,17 @@
 import { useState, useMemo } from 'react';
 import { atalhos, categoriasAtalhos, getAtalhosPorCategoria, getCategoriaAtalho } from '../data/atalhos';
+import { useToast } from '../contexts/ToastContext';
 import SearchBar from './SearchBar';
 import './PaginaAtalhos.css';
 
 function BlocoCodigo({ label, codigo }) {
   const [copiado, setCopiado] = useState(false);
+  const { showToast } = useToast();
 
   const copiar = () => {
     navigator.clipboard.writeText(codigo).then(() => {
       setCopiado(true);
+      showToast('Copiado!');
       setTimeout(() => setCopiado(false), 2000);
     });
   };
@@ -28,7 +31,6 @@ function BlocoCodigo({ label, codigo }) {
           >
             {copiado ? '✓ Copiado' : 'Copiar'}
           </button>
-          {copiado && <span className="atalhos__toast" role="status">Copiado!</span>}
         </div>
       </div>
     </div>

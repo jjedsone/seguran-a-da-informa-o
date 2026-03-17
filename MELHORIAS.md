@@ -4,9 +4,43 @@
 - **Página Certificações**: informações completas sobre CompTIA (Security+, CySA+, CASP+) e OSCP.
 - **Página Simulado**: mais de 100 perguntas e respostas com explicações; filtro por certificação; navegação anterior/próxima e contador de acertos.
 
+## Melhorias implementadas (última atualização)
+
+### Segurança
+- **Login**: Firebase Auth (e-mail/senha) quando configurado; senão uso de credenciais via variáveis de ambiente (`VITE_DEMO_USER`, `VITE_DEMO_PASS`) — sem credenciais fixas no código.
+- **Variáveis de ambiente**: `.env.example` com todas as chaves Firebase e instruções; uso de `import.meta.env` no `firebase.js`.
+
+### Arquitetura e rotas
+- **React Router**: rotas por URL (`/`, `/atalhos`, `/simulado`, etc.), histórico do navegador e deep links.
+- **Contextos**: `AuthContext` (login/logout), `ThemeContext` (tema + Firebase sync), `ToastContext` (feedback global), `FavoritosContext` (favoritos e vistos).
+
+### UX
+- **Menu hamburger** no mobile (telas &lt; 1024px): links em menu colapsável.
+- **Breadcrumb**: “Início > [página atual]” para orientação.
+- **Toast global**: mensagem “Copiado!” ao copiar código (Atalhos e Backdoor).
+- **Modal**: tecla **Esc** para fechar (já existia em `StudyDetail`).
+
+### Simulado
+- **Timer opcional**: checkbox e campo em minutos na tela inicial; contagem regressiva durante o simulado.
+- **Resumo ao final**: tela com acertos/total, percentual e lista de questões erradas para revisão.
+- **Modo “só erradas”**: botão “Revisar só erradas” no resumo; filtra apenas as questões respondidas incorretamente.
+- **Botão “Ver resumo”** na barra durante o simulado.
+
+### Performance e PWA
+- **Skeleton** no fallback do `Suspense` em vez de “Carregando…”.
+- **PWA**: `vite-plugin-pwa` com service worker (autoUpdate), cache de assets e manifest (nome, tema, standalone).
+
+### Acessibilidade
+- **ARIA**: `aria-label`, `aria-expanded`, `aria-controls` no menu; `role="status"` e `aria-live` no toast e no resumo; `role="timer"` no cronômetro.
+- **Teclado**: setas ← → no simulado (anterior/próxima); **Enter** para confirmar resposta.
+- **Login**: `aria-required`, `aria-invalid`, `aria-describedby` nos campos; botão desabilitado durante carregamento.
+
+### Deploy
+- **GitHub Actions**: workflow `.github/workflows/deploy-firebase.yml` para build e deploy no Firebase Hosting ao push em `main` (requer secrets configurados no repositório).
+
 ---
 
-## Melhorias recomendadas
+## Melhorias recomendadas (próximos passos)
 
 ### 1. **Navegação e UX**
 - **Menu colapsável** no mobile: em telas pequenas, agrupar os links em um menu hambúrguer para não poluir o header.

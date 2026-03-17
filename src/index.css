@@ -28,6 +28,11 @@
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
+  /* Profundidade / sombras 3D */
+  --depth-1: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  --depth-2: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  --depth-3: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(16, 185, 129, 0.1);
+  --depth-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--accent-alpha);
   font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
@@ -55,6 +60,32 @@
   50% { box-shadow: 0 0 20px 2px var(--accent-alpha); }
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes gradientShift {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+@keyframes depthIn {
+  from {
+    opacity: 0;
+    transform: perspective(800px) translateZ(-80px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(800px) translateZ(0) scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 /* Aplicar entrada suave na página principal */
 .app__main,
 .atalhos-teclado__main,
@@ -74,10 +105,26 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--bg);
   background-image:
     linear-gradient(180deg, transparent 0%, var(--bg) 100%),
+    radial-gradient(ellipse 120% 60% at 50% -30%, rgba(16, 185, 129, 0.12), transparent 50%),
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.08), transparent);
+  background-size: 100% 100%, 100% 100%, 100% 100%;
   transition: background-color var(--transition-slow);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 80% 40% at 70% 20%, rgba(16, 185, 129, 0.04), transparent 40%);
+    animation: gradientShift 8s ease-in-out infinite;
+    z-index: 0;
+  }
+  #root { position: relative; z-index: 1; }
 }
 
 #root {
@@ -109,6 +156,10 @@ input:focus-visible,
   --accent-warn: #d97706;
   --accent-alpha: rgba(5, 150, 105, 0.12);
   --shadow: rgba(0, 0, 0, 0.08);
+  --depth-1: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --depth-2: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+  --depth-3: 0 20px 40px -10px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(5, 150, 105, 0.08);
+  --depth-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px var(--accent-alpha);
 }
 
 [data-theme="light"] body {
@@ -120,8 +171,10 @@ input:focus-visible,
 /* ========== Versão para impressão ========== */
 @media print {
   .app__global-nav,
+  .app__nav-hamburger,
   .app__theme-toggle,
   .app__logout,
+  .app__breadcrumb-wrap,
   .app__filtros,
   .atalhos__nav,
   .atalhos__busca-wrap,
@@ -130,9 +183,12 @@ input:focus-visible,
   .atalhos-teclado__busca,
   .simulado__modos,
   .simulado__filtro-wrap,
+  .simulado__barra,
+  .simulado__timer-opts,
   .study-detail-overlay .study-detail__fechar,
   button.atalhos__bloco-copy,
-  .atalhos__toast {
+  .atalhos__toast,
+  .toast-global {
     display: none !important;
   }
 

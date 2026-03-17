@@ -1,8 +1,21 @@
+import { useState, useRef } from 'react';
 import { getCategoria } from '../data/estudos';
 import './StudyCard.css';
 
 export default function StudyCard({ estudo, onClick, isFavorito, onToggleFavorito }) {
   const periodo = getCategoria(estudo.periodoId);
+  const cardRef = useRef(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    setTilt({ x: (y - 0.5) * 8, y: (x - 0.5) * -8 });
+  };
+
+  const handleMouseLeave = () => setTilt({ x: 0, y: 0 });
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -13,12 +26,19 @@ export default function StudyCard({ estudo, onClick, isFavorito, onToggleFavorit
 
   return (
     <article
+      ref={cardRef}
       className="study-card"
       role="button"
       tabIndex={0}
       onClick={() => onClick(estudo)}
       onKeyDown={handleKeyDown}
-      style={{ '--card-accent': periodo?.cor || '#64748b' }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        '--card-accent': periodo?.cor || '#64748b',
+        '--tilt-x': `${tilt.x}deg`,
+        '--tilt-y': `${tilt.y}deg`,
+      }}
       aria-label={`Ver detalhes: ${estudo.titulo}`}
     >
       <div className="study-card__header">

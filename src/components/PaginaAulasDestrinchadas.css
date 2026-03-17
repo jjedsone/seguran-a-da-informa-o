@@ -1,0 +1,476 @@
+.aulas-destrinchadas {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.aulas-destrinchadas__hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-card);
+}
+
+.aulas-destrinchadas__titulo {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.aulas-destrinchadas__subtitulo {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.aulas-destrinchadas__paginas {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.aulas-destrinchadas__secao {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-left-width: 4px;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.5rem 1rem;
+  box-shadow: var(--depth-1);
+}
+
+.aulas-destrinchadas__secao-titulo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.aulas-destrinchadas__secao-num {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-tag);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.aulas-destrinchadas__secao-sub {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0 0 1.25rem;
+  line-height: 1.4;
+}
+
+.aulas-destrinchadas__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.aulas-destrinchadas__item {
+  margin-bottom: 0.5rem;
+}
+
+.aulas-destrinchadas__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  text-align: left;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  background: var(--bg-tag);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--transition-normal), background var(--transition-normal);
+}
+
+.aulas-destrinchadas__trigger:hover {
+  border-color: var(--accent);
+  background: var(--accent-alpha);
+}
+
+.aulas-destrinchadas__trigger--aberto {
+  border-color: var(--accent);
+  background: var(--accent-alpha);
+  color: var(--accent);
+}
+
+.aulas-destrinchadas__trigger-icon {
+  font-size: 0.7rem;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+.aulas-destrinchadas__conteudo {
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.aulas-destrinchadas__conteudo[hidden] {
+  display: none;
+}
+
+.aulas-destrinchadas__conteudo--aberto {
+  max-height: 2000px;
+}
+
+.aulas-destrinchadas__conteudo-body {
+  padding: 1.25rem 1rem 1.5rem;
+  margin: 0 0 0.5rem;
+  background: var(--bg);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.aulas-destrinchadas__conteudo-body h1 {
+  font-size: 1.2rem;
+  margin: 0 0 0.75rem;
+}
+
+.aulas-destrinchadas__conteudo-body h2 {
+  font-size: 1.05rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.aulas-destrinchadas__conteudo-body h3 {
+  font-size: 1rem;
+  margin: 0.75rem 0 0.35rem;
+}
+
+.aulas-destrinchadas__conteudo-body p,
+.aulas-destrinchadas__conteudo-body ul,
+.aulas-destrinchadas__conteudo-body ol {
+  margin: 0 0 0.5rem;
+}
+
+.aulas-destrinchadas__conteudo-body strong {
+  color: var(--accent);
+}
+
+.aulas-destrinchadas__conteudo-body hr {
+  border: none;
+  border-top: 1px solid var(--border-card);
+  margin: 1rem 0;
+}
+
+.aulas-destrinchadas__conteudo-body pre {
+  background: var(--bg-tag);
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+}
+
+/* Apostila em PDF na página */
+.aulas-destrinchadas__pdf-wrap {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-card);
+}
+
+.aulas-destrinchadas__pdf-link {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-alpha);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: background var(--transition-normal), color var(--transition-normal);
+}
+
+.aulas-destrinchadas__pdf-link:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.aulas-destrinchadas__pdf-iframe {
+  width: 100%;
+  height: 70vh;
+  min-height: 400px;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  background: var(--bg-tag);
+}
+
+/* Botão CTA do quiz no hero */
+.aulas-destrinchadas__hero-acoes {
+  margin-top: 1.25rem;
+}
+
+.aulas-destrinchadas__quiz-cta {
+  padding: 0.65rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-alpha);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-normal), color var(--transition-normal);
+}
+
+.aulas-destrinchadas__quiz-cta:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Quiz: tela inicial */
+.aulas-destrinchadas__quiz-inicio {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.aulas-destrinchadas__quiz-titulo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  color: var(--text-primary);
+}
+
+.aulas-destrinchadas__quiz-desc {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+}
+
+.aulas-destrinchadas__quiz-contador {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 0 0 1.5rem;
+}
+
+.aulas-destrinchadas__quiz-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.aulas-destrinchadas__quiz-btn {
+  padding: 0.65rem 1.35rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: opacity var(--transition-normal);
+}
+
+.aulas-destrinchadas__quiz-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.aulas-destrinchadas__quiz-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.aulas-destrinchadas__quiz-btn--sec {
+  background: var(--bg-tag);
+  color: var(--text-primary);
+  border: 1px solid var(--border-card);
+}
+
+.aulas-destrinchadas__quiz-btn--sec:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Quiz: rodando */
+.aulas-destrinchadas__quiz-wrap {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.aulas-destrinchadas__quiz-barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.aulas-destrinchadas__quiz-progresso {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.aulas-destrinchadas__quiz-score {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.aulas-destrinchadas__quiz-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.25rem;
+  box-shadow: var(--depth-1);
+}
+
+.aulas-destrinchadas__quiz-pergunta {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 0 0 1.25rem;
+}
+
+.aulas-destrinchadas__quiz-opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.aulas-destrinchadas__quiz-opcao {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-card);
+  border-radius: var(--radius-md);
+  background: var(--bg-tag);
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  transition: border-color var(--transition-normal), background var(--transition-normal);
+}
+
+.aulas-destrinchadas__quiz-opcao:hover {
+  border-color: var(--accent);
+  background: var(--accent-alpha);
+}
+
+.aulas-destrinchadas__quiz-opcao--sel {
+  border-color: var(--accent);
+  background: var(--accent-alpha);
+}
+
+.aulas-destrinchadas__quiz-opcao--certa {
+  border-color: var(--success, #10b981);
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.aulas-destrinchadas__quiz-opcao--errada {
+  border-color: var(--error, #ef4444);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.aulas-destrinchadas__quiz-opcao input[type="radio"] {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.aulas-destrinchadas__quiz-explicacao {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.aulas-destrinchadas__quiz-explicacao strong {
+  color: var(--accent);
+}
+
+.aulas-destrinchadas__quiz-navegacao {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.aulas-destrinchadas__quiz-voltar {
+  margin-top: 1.25rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.aulas-destrinchadas__quiz-voltar:hover {
+  color: var(--accent);
+}
+
+/* Quiz: resumo */
+.aulas-destrinchadas__quiz-resumo {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+.aulas-destrinchadas__quiz-resumo-stats {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.aulas-destrinchadas__quiz-resumo-stats p {
+  margin: 0 0 0.35rem;
+}
+
+.aulas-destrinchadas__quiz-resumo-erradas h3 {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+  color: var(--text-primary);
+}
+
+.aulas-destrinchadas__quiz-resumo-lista {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.aulas-destrinchadas__quiz-resumo-item {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+}
+
+.aulas-destrinchadas__quiz-resumo-pergunta {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+}
+
+.aulas-destrinchadas__quiz-resumo-explicacao {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 0;
+}

@@ -1,15 +1,18 @@
 import { useState, useMemo } from 'react';
 import { modulosBackdoor } from '../data/backdoorCurso';
+import { useToast } from '../contexts/ToastContext';
 import SearchBar from './SearchBar';
 import './PaginaBackdoor.css';
 
 function CardBackdoor({ mod, onCopiar }) {
   const [copiado, setCopiado] = useState(false);
+  const { showToast } = useToast();
 
   const copiar = () => {
     const texto = `${mod.titulo}\n\n${mod.conteudo}`;
     navigator.clipboard.writeText(texto).then(() => {
       setCopiado(true);
+      showToast('Copiado!');
       setTimeout(() => setCopiado(false), 2000);
     });
     onCopiar?.();

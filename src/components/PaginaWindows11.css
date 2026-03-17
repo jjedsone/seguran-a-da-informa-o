@@ -1,0 +1,134 @@
+.win11 {
+  min-height: 100vh;
+  padding: 1.5rem 1rem 3rem;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.win11__hero {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-card);
+}
+
+.win11__titulo {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.win11__subtitulo {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.win11__main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.win11__card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--depth-1);
+}
+
+.win11__card-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 1rem 1.25rem;
+  background: var(--bg-tag);
+  border-bottom: 1px solid var(--border-card);
+  color: var(--text-primary);
+}
+
+.win11__card-icon {
+  font-size: 1.25rem;
+}
+
+.win11__card-body {
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.win11__bloco {
+  margin-bottom: 1.25rem;
+}
+
+.win11__bloco:last-child {
+  margin-bottom: 0;
+}
+
+.win11__bloco-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--accent);
+}
+
+.win11__bloco-texto {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+}
+
+.win11__bloco-passos {
+  margin: 0.5rem 0 1rem;
+  padding-left: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.win11__bloco-passos li {
+  margin-bottom: 0.35rem;
+}
+
+.win11__bloco-codigo {
+  margin: 0.5rem 0;
+  padding: 0.75rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  overflow-x: auto;
+}
+
+.win11__bloco-codigo code {
+  font-family: inherit;
+}
+
+.win11__bloco-obs {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 0.5rem 0 0;
+  font-style: italic;
+}
+
+.win11__footer {
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-tag);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.win11__footer p {
+  margin: 0;
+}

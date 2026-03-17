@@ -1,11 +1,15 @@
-import { useState, useMemo, useEffect, useRef, lazy, Suspense } from 'react';
-import { estudos, periodos, buscarEstudos } from './data/estudos';
-import { getFavoritos, getVistos, toggleFavorito, marcarComoVisto } from './lib/cursoStorage';
-import SearchBar from './components/SearchBar';
-import StudyCard from './components/StudyCard';
-import StudyDetail from './components/StudyDetail';
-import GlobalSearch from './components/GlobalSearch';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { ToastProvider } from './contexts/ToastContext';
+import { FavoritosProvider } from './contexts/FavoritosContext';
+import Layout from './components/Layout';
 import Login from './components/Login';
+import CursoPage from './pages/CursoPage';
+import Skeleton from './components/Skeleton';
+import './App.css';
 
 const PaginaAtalhos = lazy(() => import('./components/PaginaAtalhos'));
 const PaginaAtalhosTeclado = lazy(() => import('./components/PaginaAtalhosTeclado'));
@@ -20,259 +24,99 @@ const PaginaApostila = lazy(() => import('./components/PaginaApostila'));
 const PaginaGuiaSeguranca = lazy(() => import('./components/PaginaGuiaSeguranca'));
 const PaginaFerramentasProjetos = lazy(() => import('./components/PaginaFerramentasProjetos'));
 const PaginaJogosSeguranca = lazy(() => import('./components/PaginaJogosSeguranca'));
-import { initFirebaseUserAndPrefs, subscribePreferencias, savePreferencias } from './lib/firestorePrefs';
-import { IMAGEM_HEADER } from './data/imagens';
-import './App.css';
+const PaginaAulasDestrinchadas = lazy(() => import('./components/PaginaAulasDestrinchadas'));
+const Pagina7Camadas = lazy(() => import('./components/Pagina7Camadas'));
+const PaginaWindows11 = lazy(() => import('./components/PaginaWindows11'));
 
-const THEME_KEY = 'seguranca-app-theme';
-const AUTH_KEY = 'seguranca-app-auth';
+const TITULOS = {
+  '/': 'Curso',
+  '/atalhos': 'Atalhos',
+  '/atalhos-teclado': 'Atalhos de teclado',
+  '/segmentos': 'Proteção por segmento',
+  '/backdoor': 'Backdoor & Acesso remoto',
+  '/certificacoes': 'Certificações',
+  '/aulas-praticas': 'Aulas Práticas',
+  '/simulado': 'Simulado',
+  '/simulador': 'Simulador',
+  '/extrair-estudo': 'Extrair o estudo',
+  '/apostila': 'Apostila',
+  '/guia': 'Guia de Segurança',
+  '/projetos': 'Projetos & Ferramentas',
+  '/jogos': 'Jogos de Segurança',
+  '/aulas-destrinchadas': 'Destrinchando as 16 Aulas',
+  '/7-camadas': 'As 7 Camadas do Modelo OSI',
+  '/windows-11': 'Tudo sobre o Windows 11',
+};
 
-export default function App() {
-  const [autenticado, setAutenticado] = useState(() => localStorage.getItem(AUTH_KEY) === 'true');
-  const [pagina, setPagina] = useState('curso');
-  const [tema, setTema] = useState(() => localStorage.getItem(THEME_KEY) || 'dark');
-  const [busca, setBusca] = useState('');
-  const [categoriaAtiva, setCategoriaAtiva] = useState('');
-  const [estudoAberto, setEstudoAberto] = useState(null);
-  const [firebaseUserId, setFirebaseUserId] = useState(null);
-  const [favoritos, setFavoritos] = useState(() => getFavoritos());
-  const [soFavoritos, setSoFavoritos] = useState(false);
-  const [vistos, setVistos] = useState(() => getVistos());
-  const [apostilaCapituloInicial, setApostilaCapituloInicial] = useState(null);
-  const temaFromFirestoreRef = useRef(false);
-
+function DocumentTitle() {
+  const location = useLocation();
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', tema);
-    localStorage.setItem(THEME_KEY, tema);
-  }, [tema]);
-
-  useEffect(() => {
-    let unsub = () => {};
-    initFirebaseUserAndPrefs().then((uid) => {
-      if (!uid) return;
-      setFirebaseUserId(uid);
-      unsub = subscribePreferencias(uid, (data) => {
-        if (data.tema && !temaFromFirestoreRef.current) {
-          temaFromFirestoreRef.current = true;
-          setTema(data.tema);
-        }
-      });
-    });
-    return () => unsub();
-  }, []);
-
-  useEffect(() => {
-    if (!firebaseUserId) return;
-    savePreferencias(firebaseUserId, { tema }).catch(() => {});
-  }, [firebaseUserId, tema]);
-
-  useEffect(() => {
-    if (estudoAberto) {
-      marcarComoVisto(estudoAberto.id);
-      setVistos(getVistos());
-    }
-  }, [estudoAberto]);
-
-  const handleToggleFavorito = (id, e) => {
-    e.stopPropagation();
-    toggleFavorito(id);
-    setFavoritos(getFavoritos());
-  };
-
-  useEffect(() => {
-    const titulos = {
-      curso: 'Curso',
-      atalhos: 'Atalhos',
-      'atalhos-teclado': 'Atalhos de teclado',
-      segmentos: 'Proteção por segmento',
-      backdoor: 'Backdoor & Acesso remoto',
-      certificacoes: 'Certificações',
-      'aulas-praticas': 'Aulas Práticas',
-      simulado: 'Simulado',
-      simulador: 'Simulador',
-      'extrair-estudo': 'Extrair o estudo',
-      apostila: 'Apostila',
-      guia: 'Guia de Segurança',
-      projetos: 'Projetos & Ferramentas',
-      jogos: 'Jogos de Segurança',
-    };
-    const nome = titulos[pagina] || pagina;
+    const nome = TITULOS[location.pathname] || 'Curso';
     document.title = `${nome} – Segurança Cibernética`;
-  }, [pagina]);
+  }, [location.pathname]);
+  return null;
+}
 
-  const toggleTema = () => setTema((t) => (t === 'dark' ? 'light' : 'dark'));
+function ApostilaRoute() {
+  const location = useLocation();
+  const capituloInicial = location.state?.capituloInicial ?? null;
+  return (
+    <PaginaApostila
+      initialCapituloId={capituloInicial}
+      onInitialAberto={() => window.history.replaceState({}, '', location.pathname)}
+    />
+  );
+}
 
-  const handleLogin = () => {
-    localStorage.setItem(AUTH_KEY, 'true');
-    setAutenticado(true);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem(AUTH_KEY);
-    setAutenticado(false);
-  };
-
-  const listaFiltrada = useMemo(() => {
-    let resultado = buscarEstudos(busca);
-    if (categoriaAtiva) resultado = resultado.filter((e) => e.periodoId === categoriaAtiva);
-    if (soFavoritos) resultado = resultado.filter((e) => favoritos.has(e.id));
-    return resultado;
-  }, [busca, categoriaAtiva, soFavoritos, favoritos]);
+function AppRoutes() {
+  const { autenticado, login } = useAuth();
 
   if (!autenticado) {
-    return <Login onLogin={handleLogin} />;
+    return <Login onLogin={login} />;
   }
 
-  const navLink = (id, label) => (
-    <button
-      type="button"
-      className={`app__global-nav-link ${pagina === id ? 'app__global-nav-link--ativo' : ''}`}
-      onClick={() => setPagina(id)}
-    >
-      {label}
-    </button>
-  );
-
   return (
-    <div className="app">
-      <nav className="app__global-nav" aria-label="Navegação principal">
-        <div className="app__global-nav-links">
-          <GlobalSearch
-            onSelectCurso={(estudo) => { setPagina('curso'); setEstudoAberto(estudo); }}
-            onSelectAtalhos={() => setPagina('atalhos')}
-            onSelectApostila={(capId) => { setPagina('apostila'); setApostilaCapituloInicial(capId); }}
-          />
-          {navLink('curso', 'Curso')}
-          {navLink('atalhos', 'Atalhos')}
-          {navLink('atalhos-teclado', 'Atalhos de teclado')}
-          {navLink('segmentos', 'Proteção por segmento')}
-          {navLink('backdoor', 'Backdoor & Acesso remoto')}
-          {navLink('certificacoes', 'Certificações')}
-          {navLink('aulas-praticas', 'Aulas Práticas')}
-          {navLink('simulado', 'Simulado')}
-          {navLink('simulador', 'Simulador')}
-          {navLink('extrair-estudo', 'Extrair o estudo')}
-          {navLink('apostila', 'Apostila')}
-          {navLink('guia', 'Guia de Segurança')}
-          {navLink('projetos', 'Projetos & Ferramentas')}
-        </div>
-        <button
-          type="button"
-          className="app__theme-toggle"
-          onClick={toggleTema}
-          title={tema === 'dark' ? 'Usar tema claro' : 'Usar tema escuro'}
-          aria-label={tema === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
-        >
-          <span className="app__theme-icon" aria-hidden="true">{tema === 'dark' ? '☀️' : '🌙'}</span>
-          <span className="app__theme-label">Tema {tema === 'dark' ? 'claro' : 'escuro'}</span>
-        </button>
-        <button
-          type="button"
-          className="app__logout"
-          onClick={handleLogout}
-          title="Sair"
-          aria-label="Sair da conta"
-        >
-          Sair
-        </button>
-      </nav>
-
-      <Suspense fallback={<div className="app__loading" aria-live="polite">Carregando...</div>}>
-        {pagina === 'atalhos' && <PaginaAtalhos />}
-        {pagina === 'atalhos-teclado' && <PaginaAtalhosTeclado />}
-        {pagina === 'segmentos' && <PaginaSegmentos />}
-        {pagina === 'backdoor' && <PaginaBackdoor />}
-        {pagina === 'certificacoes' && <PaginaCertificacoes />}
-        {pagina === 'aulas-praticas' && <PaginaAulasPraticas />}
-        {pagina === 'simulado' && <PaginaSimulado firebaseUserId={firebaseUserId} />}
-        {pagina === 'simulador' && <PaginaSimulador />}
-        {pagina === 'extrair-estudo' && <PaginaExtrairEstudo />}
-        {pagina === 'apostila' && (
-          <PaginaApostila
-            initialCapituloId={apostilaCapituloInicial}
-            onInitialAberto={() => setApostilaCapituloInicial(null)}
-          />
-        )}
-        {pagina === 'guia' && <PaginaGuiaSeguranca />}
-        {pagina === 'projetos' && <PaginaFerramentasProjetos />}
-        {pagina === 'jogos' && <PaginaJogosSeguranca />}
+    <>
+      <DocumentTitle />
+      <Suspense fallback={<Skeleton />}>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<CursoPage />} />
+            <Route path="/atalhos" element={<PaginaAtalhos />} />
+            <Route path="/atalhos-teclado" element={<PaginaAtalhosTeclado />} />
+            <Route path="/segmentos" element={<PaginaSegmentos />} />
+            <Route path="/backdoor" element={<PaginaBackdoor />} />
+            <Route path="/certificacoes" element={<PaginaCertificacoes />} />
+            <Route path="/aulas-praticas" element={<PaginaAulasPraticas />} />
+            <Route path="/simulado" element={<PaginaSimulado />} />
+            <Route path="/simulador" element={<PaginaSimulador />} />
+            <Route path="/extrair-estudo" element={<PaginaExtrairEstudo />} />
+            <Route path="/apostila" element={<ApostilaRoute />} />
+            <Route path="/guia" element={<PaginaGuiaSeguranca />} />
+            <Route path="/projetos" element={<PaginaFerramentasProjetos />} />
+            <Route path="/jogos" element={<PaginaJogosSeguranca />} />
+            <Route path="/aulas-destrinchadas" element={<PaginaAulasDestrinchadas />} />
+            <Route path="/7-camadas" element={<Pagina7Camadas />} />
+            <Route path="/windows-11" element={<PaginaWindows11 />} />
+          </Route>
+        </Routes>
       </Suspense>
+    </>
+  );
+}
 
-      {pagina === 'curso' && (
-        <>
-          <header className="app__header">
-            <img
-              src={IMAGEM_HEADER}
-              alt=""
-              className="app__header-img"
-            />
-            <h1 className="app__titulo">Curso de Segurança Cibernética</h1>
-            <p className="app__subtitulo">Base de conhecimento – Formação profissional · 5 períodos · Material completo por disciplina</p>
-            <p className="app__metodologia">Ementa, objetivos gerais e específicos, unidades temáticas, mentalidade profissional, prática e checklist de aprendizagem — nível faculdade de elite.</p>
-            <div className="app__progresso-wrap">
-              <span className="app__progresso-texto">
-                {vistos.size} de {estudos.length} disciplinas vistas
-              </span>
-              <div className="app__progresso-bar" role="progressbar" aria-valuenow={vistos.size} aria-valuemin={0} aria-valuemax={estudos.length}>
-                <div className="app__progresso-fill" style={{ width: `${(vistos.size / estudos.length) * 100}%` }} />
-              </div>
-            </div>
-            <SearchBar value={busca} onChange={setBusca} placeholder="Buscar disciplina, tag ou tema..." />
-            <nav className="app__filtros" aria-label="Filtrar por período">
-              <button
-                type="button"
-                className={`app__filtro ${!categoriaAtiva && !soFavoritos ? 'app__filtro--ativo' : ''}`}
-                onClick={() => { setCategoriaAtiva(''); setSoFavoritos(false); }}
-              >
-                Todos os períodos
-              </button>
-              <button
-                type="button"
-                className={`app__filtro app__filtro--favoritos ${soFavoritos ? 'app__filtro--ativo' : ''}`}
-                onClick={() => { setSoFavoritos(true); setCategoriaAtiva(''); }}
-                title="Ver só favoritos"
-              >
-                ★ Favoritos ({favoritos.size})
-              </button>
-              {periodos.map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  className={`app__filtro ${categoriaAtiva === p.id ? 'app__filtro--ativo' : ''}`}
-                  onClick={() => { setCategoriaAtiva(p.id); setSoFavoritos(false); }}
-                  style={categoriaAtiva === p.id ? { borderColor: p.cor, color: p.cor } : {}}
-                >
-                  {p.nome} – {p.titulo}
-                </button>
-              ))}
-            </nav>
-          </header>
-
-          <main className="app__main">
-            {listaFiltrada.length === 0 ? (
-              <p className="app__vazio">
-                {soFavoritos ? 'Nenhum favorito. Clique na estrela (☆) em uma disciplina para adicionar.' : 'Nenhum estudo encontrado. Tente outra busca ou categoria.'}
-              </p>
-            ) : (
-              <div className="app__grid">
-                {listaFiltrada.map((estudo) => (
-                  <StudyCard
-                    key={estudo.id}
-                    estudo={estudo}
-                    onClick={setEstudoAberto}
-                    isFavorito={favoritos.has(estudo.id)}
-                    onToggleFavorito={(e) => handleToggleFavorito(estudo.id, e)}
-                  />
-                ))}
-              </div>
-            )}
-          </main>
-
-          {estudoAberto && (
-            <StudyDetail estudo={estudoAberto} onFechar={() => setEstudoAberto(null)} />
-          )}
-        </>
-      )}
-    </div>
+export default function App() {
+  return (
+    <AuthProvider>
+      <ThemeProvider>
+        <ToastProvider>
+          <FavoritosProvider>
+            <BrowserRouter basename={import.meta.env.BASE_URL}>
+              <AppRoutes />
+            </BrowserRouter>
+          </FavoritosProvider>
+        </ToastProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
