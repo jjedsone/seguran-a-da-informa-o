@@ -22,29 +22,37 @@ Ou tudo de uma vez:
 npx firebase deploy
 ```
 
-## 3. Autenticação anônima (para Firestore)
+## 3. Autenticação
 
-Para o app salvar tema e progresso no Firestore, é preciso ativar **Login anônimo**:
+- **Login com Google (tela de login):** Authentication → **Sign-in method** → **Google** → Ativar.
+- **Anônimo (tema/progresso no Firestore):** mesma aba → **Provedor anônimo** → Ativar.
+- **Domínios autorizados:** Authentication → **Settings** → **Authorized domains** → inclua `localhost`, `127.0.0.1`, `seguran-39f39.web.app`, `seguran-39f39.firebaseapp.com`.
 
-1. No [Firebase Console](https://console.firebase.google.com/) → seu projeto → **Authentication**
-2. Aba **Sign-in method** → **Provedor anônimo** → Ativar → Salvar
+## 4. Configuração do app (`.env`)
 
-## 4. Configuração do app (variáveis de ambiente)
+Sem as variáveis `VITE_FIREBASE_*`, o site mostra login **demo** (usuário/senha). Com elas preenchidas, o login passa a ser **só com Google**.
 
-1. No Firebase Console → **Configurações do projeto** (ícone de engrenagem) → **Seus apps**
-2. Se ainda não tiver um app Web, clique em **</>** e registre um; anote o `apiKey`, `appId`, etc.
-3. Na pasta do projeto, copie `.env.example` para `.env` e preencha:
+**Opção A – Console:** Configurações do projeto → **Seus apps** → app Web → copie o objeto `firebaseConfig` para o `.env`.
+
+**Opção B – CLI (na pasta do projeto, após `firebase login`):**
+
+```bash
+firebase apps:list --project seguran-39f39
+firebase apps:sdkconfig web 1:89927120912:web:fc4c1ac92ff23fd635f295 --project seguran-39f39
+```
+
+Use os valores retornados no `.env`:
 
 ```
 VITE_FIREBASE_API_KEY=...
 VITE_FIREBASE_AUTH_DOMAIN=seguran-39f39.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=seguran-39f39
-VITE_FIREBASE_STORAGE_BUCKET=seguran-39f39.appspot.com
+VITE_FIREBASE_STORAGE_BUCKET=seguran-39f39.firebasestorage.app
 VITE_FIREBASE_MESSAGING_SENDER_ID=...
 VITE_FIREBASE_APP_ID=...
 ```
 
-Sem o `.env` preenchido, o app continua funcionando com `localStorage` (tema e login); o Firestore só é usado quando as variáveis estão configuradas.
+Copie `.env.example` para `.env` e preencha (o arquivo `.env` não vai para o Git).
 
 ## 5. Ajustar o ID no projeto (se necessário)
 

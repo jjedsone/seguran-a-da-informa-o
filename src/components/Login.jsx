@@ -167,7 +167,12 @@ export default function Login({ onLogin }) {
           </>
         ) : (
           <>
-            <p className="login__subtitulo">Entre para acessar o material (modo local / demonstração)</p>
+            <p className="login__aviso-firebase" role="note">
+              <strong>Firebase não configurado.</strong> Preencha <code>VITE_FIREBASE_*</code> no arquivo{' '}
+              <code>.env</code> na raiz do projeto para usar <strong>Entrar com Google</strong>. Guia:{' '}
+              <code>FIREBASE.md</code>.
+            </p>
+            <p className="login__subtitulo">Ou use o modo demonstração abaixo (usuário/senha do .env)</p>
             <form
               className="login__form"
               onSubmit={handleSubmit}

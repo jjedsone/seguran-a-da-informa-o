@@ -1,6 +1,14 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth, signInAnonymously, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'firebase/auth';
+import {
+  getAuth,
+  signInAnonymously,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  sendPasswordResetEmail,
+} from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY ?? '',
@@ -42,6 +50,26 @@ export async function ensureAnonymousAuth() {
     ? { user: auth.currentUser }
     : await signInAnonymously(auth);
   return user;
+}
+
+/** Login com conta Google (Gmail). Ative o provedor Google em Firebase Console → Authentication → Sign-in method. */
+export async function loginWithGoogle() {
+  if (!isConfigValid() || !auth) return { user: null, error: 'Firebase não configurado.' };
+  try {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    const { user } = await signInWithPopup(auth, provider);
+    return { user, error: null };
+  } catch (err) {
+    const code = err?.code || '';
+    let msg = 'Não foi possível entrar com o Google.';
+    if (code === 'auth/popup-closed-by-user') msg = 'Login cancelado.';
+    else if (code === 'auth/popup-blocked') msg = 'Pop-up bloqueado. Permita pop-ups para este site e tente de novo.';
+    else if (code === 'auth/unauthorized-domain') msg = 'Este domínio não está autorizado no Firebase. Adicione-o em Authentication → Settings → Authorized domains.';
+    else if (code === 'auth/account-exists-with-different-credential') msg = 'Já existe uma conta com este e-mail usando outro método de login.';
+    else if (err?.message) msg = err.message;
+    return { user: null, error: msg };
+  }
 }
 
 /** Login com e-mail e senha (Firebase Auth). Use em produção; configure usuários no Console Firebase. */
